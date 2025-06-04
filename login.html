@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Sistema de Pedidos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3b82f6',
+          },
+        },
+      },
+    };
+  </script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+  <div class="bg-white shadow-md rounded-lg p-8 w-full max-w-md">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Entrar no Sistema</h2>
+
+    <form id="login-form" class="flex flex-col gap-4">
+      <div>
+        <label for="username" class="block text-sm font-medium text-gray-700">Usuário</label>
+        <input type="text" id="username" name="username" required
+          class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+      </div>
+
+      <div>
+        <label for="senha" class="block text-sm font-medium text-gray-700">Senha</label>
+        <input type="password" id="senha" name="senha" required
+          class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+      </div>
+
+      <button type="submit"
+        class="bg-primary text-white py-2 rounded-md hover:bg-blue-700 transition">
+        Entrar
+      </button>
+    </form>
+
+    <p id="login-error" class="text-red-500 mt-4 text-sm text-center hidden">
+      Usuário ou senha inválidos.
+    </p>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('login-form');
+    const loginError = document.getElementById('login-error');
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const senha = document.getElementById('senha').value;
+
+      try {
+        const res = await fetch('http://localhost:3000/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, senha }) // note o campo "senha" aqui
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          localStorage.setItem('username', data.username);
+          window.location.href = '/erp.html';
+        } else {
+          loginError.classList.remove('hidden');
+        }
+      } catch (err) {
+        console.error('Erro de login:', err);
+        loginError.classList.remove('hidden');
+      }
+    });
+  </script>
+
+</body>
+</html>

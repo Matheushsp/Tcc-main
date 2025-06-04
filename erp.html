@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>  Painel Administrativo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+
+  <!-- Header -->
+  <header class="flex justify-between items-center px-6 py-4 border-b border-gray-700">
+    <h1 class="text-xl font-bold flex items-center gap-2">
+      <span class="text-2xl">🍪</span> Cookie Store
+    </h1>
+    <div class="text-sm">cookie.com</div>
+  </header>
+
+  <!-- Main -->
+  <main class="p-6">
+    <h2 class="text-3xl font-bold mb-6">Painel Administrativo</h2>
+
+    <!-- Gráfico -->
+    <div class="bg-gray-800 p-4 rounded-lg shadow mb-6">
+      <h3 class="text-lg font-semibold mb-2">Pedidos por Dia</h3>
+      <canvas id="graficoPedidos"></canvas>
+    </div>
+
+    <!-- Tabelas -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Tabela de Pedidos Recentes -->
+      <div class="bg-gray-800 p-4 rounded-lg shadow">
+        <h3 class="text-lg font-semibold mb-4">Tabela de Pedidos </h3>
+        <table class="w-full text-left">
+          <thead>
+            <tr class="border-b border-gray-600">
+              <th class="py-2">Nome</th>
+              <th>Produto</th>
+              <th>Telefone</th>
+              <th>Endereço</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-pedidos">
+            <tr><td colspan="4" class="text-center py-4 text-gray-400">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Power BI Embed -->
+      <div class="bg-gray-800 p-4 rounded-lg shadow flex flex-col items-center justify-center">
+        <h3 class="text-lg font-semibold mb-4">Relatório Power BI Embed aqui</h3>
+        <div class="bg-gray-700 w-full h-64 flex items-center justify-center rounded">
+          <span class="text-2xl">📊 Power BI</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // GRÁFICO: (você pode comentar se ainda não tiver rota /api/grafico)
+    fetch('http://localhost:3000/api/grafico')
+      .then(res => res.json())
+      .then(data => {
+        const dias = data.map(row => row.dia_semana.trim());
+        const valores = data.map(row => parseInt(row.total));
+        new Chart(document.getElementById('graficoPedidos'), {
+          type: 'line',
+          data: {
+            labels: dias,
+            datasets: [{
+              label: 'Pedidos',
+              data: valores,
+              borderColor: '#3b82f6',
+              backgroundColor: 'transparent',
+              tension: 0.3,
+              pointBackgroundColor: '#3b82f6',
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: { color: '#ccc' },
+                grid: { color: '#444' }
+              },
+              x: {
+                ticks: { color: '#ccc' },
+                grid: { color: '#444' }
+              }
+            },
+            plugins: {
+              legend: {
+                labels: { color: '#ccc' }
+              }
+            }
+          }
+        });
+      })
+      .catch(err => console.error('Erro ao carregar gráfico:', err));
+
+    // TABELA: corrige o endpoint para /pedido e lê produtos do campo "itens"
+    fetch('http://localhost:3000/pedido')
+      .then(res => res.json())
+      .then(pedidos => {
+        const tbody = document.getElementById('tabela-pedidos');
+        tbody.innerHTML = '';
+
+        if (!pedidos.length) {
+          tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-gray-400">Nenhum pedido encontrado.</td></tr>`;
+          return;
+        }
+
+        pedidos.forEach(p => {
+          let itens = [];
+          try {
+            itens = JSON.parse(p.itens);
+          } catch {
+            itens = [{ name: "Desconhecido" }];
+          }
+
+          const nomesProdutos = itens.map(i => i.name).join(', ');
+
+          tbody.innerHTML += `
+            <tr class="border-b border-gray-700">
+              <td class="py-2">${p.cliente_nome}</td>
+              <td>${nomesProdutos}</td>
+              <td>${p.cliente_telefone}</td>
+              <td>${p.endereco || '-'}</td>
+            </tr>
+          `;
+        });
+      })
+      .catch(err => {
+        const tbody = document.getElementById('tabela-pedidos');
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-red-500">Erro ao carregar dados.</td></tr>`;
+        console.error('Erro ao carregar pedidos:', err);
+      });
+  </script>
+
+</body>
+</html>
