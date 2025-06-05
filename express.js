@@ -4,7 +4,9 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+
+// const port = 3000;
 
 // Configuração da conexão com o PostgreSQL (Neon)
 const client = new Client({
