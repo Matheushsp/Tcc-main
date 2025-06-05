@@ -59,7 +59,7 @@
 
   <script>
     // GRÁFICO: (você pode comentar se ainda não tiver rota /api/grafico)
-    fetch('http://localhost:3000/api/grafico')
+    fetch('https://tcc-uh9r.onrender.com/pedido')
       .then(res => res.json())
       .then(data => {
         const dias = data.map(row => row.dia_semana.trim());
