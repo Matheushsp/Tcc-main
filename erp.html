@@ -100,7 +100,7 @@
       .catch(err => console.error('Erro ao carregar gráfico:', err));
 
     // TABELA: corrige o endpoint para /pedido e lê produtos do campo "itens"
-    fetch('http://localhost:3000/pedido')
+    fetch('https://seu-backend.onrender.com/pedido')
       .then(res => res.json())
       .then(pedidos => {
         const tbody = document.getElementById('tabela-pedidos');
