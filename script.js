@@ -149,7 +149,7 @@ checkoutBtn.addEventListener("click", async () => {
   }
 
   try {
-    const response = await fetch("https://seu-backend.onrender.com/pedido", {
+    const response = await fetch("https://tcc-uh9r.onrender.com/pedido", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

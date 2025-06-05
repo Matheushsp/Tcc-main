@@ -57,7 +57,7 @@
       const senha = document.getElementById('senha').value;
 
       try {
-        const res = await fetch('https://seu-backend.onrender.com/pedido', {
+        const res = await fetch('https://tcc-uh9r.onrender.com/pedido', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username, senha }) // note o campo "senha" aqui
