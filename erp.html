@@ -3,140 +3,206 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>  Painel Administrativo</title>
+  <title>Cookie Store - Painel</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark: {
+              900: '#0a0a0a',
+              800: '#1a1a1a',
+              700: '#2a2a2a',
+              600: '#3a3a3a',
+            }
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body class="bg-gray-900 text-white font-sans">
+<body class="bg-dark-900 text-gray-200">
 
-  <!-- Header -->
-  <header class="flex justify-between items-center px-6 py-4 border-b border-gray-700">
-    <h1 class="text-xl font-bold flex items-center gap-2">
-      <span class="text-2xl">🍪</span> Cookie Store
-    </h1>
-    <div class="text-sm">cookie.com</div>
-  </header>
-
-  <!-- Main -->
-  <main class="p-6">
-    <h2 class="text-3xl font-bold mb-6">Painel Administrativo</h2>
-
-    <!-- Gráfico -->
-    <div class="bg-gray-800 p-4 rounded-lg shadow mb-6">
-      <h3 class="text-lg font-semibold mb-2">Pedidos por Dia</h3>
-      <canvas id="graficoPedidos"></canvas>
-    </div>
-
-    <!-- Tabelas -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Tabela de Pedidos Recentes -->
-      <div class="bg-gray-800 p-4 rounded-lg shadow">
-        <h3 class="text-lg font-semibold mb-4">Tabela de Pedidos </h3>
-        <table class="w-full text-left">
-          <thead>
-            <tr class="border-b border-gray-600">
-              <th class="py-2">Nome</th>
-              <th>Produto</th>
-              <th>Telefone</th>
-              <th>Endereço</th>
-            </tr>
-          </thead>
-          <tbody id="tabela-pedidos">
-            <tr><td colspan="4" class="text-center py-4 text-gray-400">Carregando...</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Power BI Embed -->
-      <div class="bg-gray-800 p-4 rounded-lg shadow flex flex-col items-center justify-center">
-        <h3 class="text-lg font-semibold mb-4">Relatório Power BI Embed aqui</h3>
-        <div class="bg-gray-700 w-full h-64 flex items-center justify-center rounded">
-          <span class="text-2xl">📊 Power BI</span>
+  <!-- Layout -->
+  <div class="min-h-screen">
+    <!-- Header -->
+    <header class="bg-dark-800 shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold">
+          <span class="text-2xl">🍪</span> Cookie Store
+        </h1>
+        <div class="flex items-center space-x-4">
+          <span class="text-sm text-gray-400">admin@cookiestore.com</span>
+          <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
+            <i class="fas fa-user text-sm"></i>
+          </div>
         </div>
       </div>
-    </div>
-  </main>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+      <h2 class="text-2xl font-bold mb-6">Visão Geral</h2>
+
+      <!-- Cards Resumo -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-dark-700 p-4 rounded-lg border border-dark-600 hover:border-blue-500 transition-colors">
+          <p class="text-sm text-gray-400">Pedidos Hoje</p>
+          <p class="text-2xl font-bold">24</p>
+        </div>
+        <div class="bg-dark-700 p-4 rounded-lg border border-dark-600 hover:border-green-500 transition-colors">
+          <p class="text-sm text-gray-400">Receita</p>
+          <p class="text-2xl font-bold">R$ 1.245</p>
+        </div>
+        <div class="bg-dark-700 p-4 rounded-lg border border-dark-600 hover:border-purple-500 transition-colors">
+          <p class="text-sm text-gray-400">Clientes Novos</p>
+          <p class="text-2xl font-bold">7</p>
+        </div>
+        <div class="bg-dark-700 p-4 rounded-lg border border-dark-600 hover:border-yellow-500 transition-colors">
+          <p class="text-sm text-gray-400">Avaliação</p>
+          <p class="text-2xl font-bold">4.7/5</p>
+        </div>
+      </div>
+
+      <!-- Gráfico -->
+      <div class="bg-dark-700 p-4 rounded-lg border border-dark-600 mb-6">
+        <h3 class="text-lg font-semibold mb-3">Pedidos nos últimos 7 dias</h3>
+        <canvas id="graficoPedidos" height="200"></canvas>
+      </div>
+
+      <!-- Tabela de Pedidos -->
+      <div class="bg-dark-700 rounded-lg border border-dark-600 overflow-hidden">
+        <div class="px-4 py-3 border-b border-dark-600 flex justify-between items-center">
+          <h3 class="font-semibold">Últimos Pedidos</h3>
+          <a href="#" class="text-sm text-blue-400 hover:text-blue-300 hover:underline">Ver todos</a>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-dark-600">
+            <thead class="bg-dark-800">
+              <tr>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-400">Cliente</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-400">Produtos</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-400">Valor</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-400">Status</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-pedidos" class="divide-y divide-dark-600">
+              <tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Carregando pedidos...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
 
   <script>
-    // GRÁFICO: (você pode comentar se ainda não tiver rota /api/grafico)
-    fetch('https://tcc-uh9r.onrender.com/pedido')
-      .then(res => res.json())
-      .then(data => {
-        const dias = data.map(row => row.dia_semana.trim());
-        const valores = data.map(row => parseInt(row.total));
-        new Chart(document.getElementById('graficoPedidos'), {
-          type: 'line',
-          data: {
-            labels: dias,
-            datasets: [{
-              label: 'Pedidos',
-              data: valores,
-              borderColor: '#3b82f6',
-              backgroundColor: 'transparent',
-              tension: 0.3,
-              pointBackgroundColor: '#3b82f6',
-            }]
+    // Dados do gráfico
+    const dadosPedidos = {
+      dias: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+      valores: [12, 19, 8, 15, 22, 18, 24]
+    };
+
+    // Inicializar gráfico
+    document.addEventListener('DOMContentLoaded', function() {
+      // Gráfico de Pedidos
+      const ctx = document.getElementById('graficoPedidos').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: dadosPedidos.dias,
+          datasets: [{
+            label: 'Pedidos',
+            data: dadosPedidos.valores,
+            backgroundColor: '#3b82f6',
+            borderRadius: 4,
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false
+            }
           },
-          options: {
-            scales: {
-              y: {
-                beginAtZero: true,
-                ticks: { color: '#ccc' },
-                grid: { color: '#444' }
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: '#3a3a3a',
+                drawBorder: false
               },
-              x: {
-                ticks: { color: '#ccc' },
-                grid: { color: '#444' }
+              ticks: {
+                color: '#9ca3af'
               }
             },
-            plugins: {
-              legend: {
-                labels: { color: '#ccc' }
+            x: {
+              grid: {
+                display: false,
+                drawBorder: false
+              },
+              ticks: {
+                color: '#9ca3af'
               }
             }
           }
-        });
-      })
-      .catch(err => console.error('Erro ao carregar gráfico:', err));
-
-    // TABELA: corrige o endpoint para /pedido e lê produtos do campo "itens"
-    fetch('https://tcc-uh9r.onrender.com/pedido')
-      .then(res => res.json())
-      .then(pedidos => {
-        const tbody = document.getElementById('tabela-pedidos');
-        tbody.innerHTML = '';
-
-        if (!pedidos.length) {
-          tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-gray-400">Nenhum pedido encontrado.</td></tr>`;
-          return;
         }
+      });
 
-        pedidos.forEach(p => {
-          
-          let itens = p.itens;
-          try {
-            itens = JSON.parse(p.itens);
-          } catch {
-            itens = [{ name: itens }];
+      // Carregar dados da API para a tabela
+      fetch('https://tcc-uh9r.onrender.com/pedido')
+        .then(res => res.json())
+        .then(pedidos => {
+          const tbody = document.getElementById('tabela-pedidos');
+          tbody.innerHTML = '';
+
+          if (!pedidos.length) {
+            tbody.innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-center text-gray-500">Nenhum pedido encontrado</td></tr>`;
+            return;
           }
 
-          const nomesProdutos = itens.map(i => i.name).join(', ');
+          // Pegar apenas os últimos 5 pedidos para exibir
+          const ultimosPedidos = pedidos.slice(0, 5);
 
-          tbody.innerHTML += `
-            <tr class="border-b border-gray-700">
-              <td class="py-2">${p.cliente_nome}</td>
-              <td>${nomesProdutos}</td>
-              <td>${p.cliente_telefone}</td>
-              <td>${p.endereco || '-'}</td>
-            </tr>
-          `;
+          ultimosPedidos.forEach(p => {
+            let itens = p.itens;
+            try {
+              itens = JSON.parse(p.itens);
+            } catch {
+              itens = [{ name: itens }];
+            }
+
+            const nomesProdutos = itens.map(i => i.name).join(', ');
+            const valorTotal = itens.reduce((total, item) => total + (item.price || 0), 0);
+            
+            // Status simplificado
+            const status = p.status || 'Recebido';
+            const statusClass = status === 'Entregue' ? 'bg-green-900 text-green-300' : 
+                              status === 'Cancelado' ? 'bg-red-900 text-red-300' : 'bg-blue-900 text-blue-300';
+
+            tbody.innerHTML += `
+              <tr class="hover:bg-dark-600 transition-colors">
+                <td class="px-4 py-3 whitespace-nowrap">
+                  <div class="font-medium">${p.cliente_nome || 'Cliente não informado'}</div>
+                </td>
+                <td class="px-4 py-3 text-sm text-gray-400">${nomesProdutos}</td>
+                <td class="px-4 py-3 font-medium">R$ ${valorTotal.toFixed(2)}</td>
+                <td class="px-4 py-3 whitespace-nowrap">
+                  <span class="px-2 py-1 text-xs rounded-full ${statusClass}">${status}</span>
+                </td>
+              </tr>
+            `;
+          });
+        })
+        .catch(err => {
+          const tbody = document.getElementById('tabela-pedidos');
+          tbody.innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-center text-red-400">Erro ao carregar pedidos</td></tr>`;
+          console.error('Erro:', err);
         });
-      })
-      .catch(err => {
-        const tbody = document.getElementById('tabela-pedidos');
-        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-red-500">Erro ao carregar dados.</td></tr>`;
-        console.error('Erro ao carregar pedidos:', err);
-      });
+    });
   </script>
 
 </body>
