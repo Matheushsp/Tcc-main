@@ -112,11 +112,12 @@
         }
 
         pedidos.forEach(p => {
-          let itens = [];
+          
+          let itens = p.itens;
           try {
             itens = JSON.parse(p.itens);
           } catch {
-            itens = [{ name: "Desconhecido" }];
+            itens = [{ name: itens }];
           }
 
           const nomesProdutos = itens.map(i => i.name).join(', ');
