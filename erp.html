@@ -3,262 +3,136 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Admin - Editar Produtos</title>
+  <title>Painel Admin - Produtos Aleatórios</title>
   <style>
     :root {
       --primary: #4361ee;
-      --secondary: #3f37c9;
       --success: #4cc9f0;
       --danger: #f72585;
-      --light: #f8f9fa;
-      --dark: #212529;
       --gray: #6c757d;
       --border: #dee2e6;
-      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --shadow: 0 4px 6px rgba(0,0,0,0.1);
       --radius: 8px;
     }
-    
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #f5f7fb; color: var(--dark); line-height: 1.6; }
-    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-    header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 20px 0; box-shadow: var(--shadow); margin-bottom: 30px; }
-    .header-content { display: flex; justify-content: space-between; align-items: center; }
-    h1 { font-size: 1.8rem; font-weight: 600; }
-    .status-bar { display: flex; align-items: center; gap: 15px; }
-    .status { background: rgba(255, 255, 255, 0.2); padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; }
-    .refresh-btn { background: white; color: var(--primary); border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; }
-    .refresh-btn:hover { transform: rotate(90deg); background: var(--success); color: white; }
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
-    .product-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; transition: transform 0.3s ease, box-shadow 0.3s ease; }
-    .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); }
-    .product-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-    .product-id { background: var(--light); color: var(--gray); padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; }
-    .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
-    .badge-success { background: rgba(76, 201, 240, 0.2); color: var(--success); }
-    .form-group { margin-bottom: 15px; }
-    label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 0.9rem; color: var(--dark); }
-    input[type="text"], input[type="number"] { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 0.95rem; transition: border 0.3s ease, box-shadow 0.3s ease; }
-    input[type="text"]:focus, input[type="number"]:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2); }
-    .checkbox-group { display: flex; align-items: center; gap: 8px; }
-    .checkbox-group input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary); }
-    .checkbox-group label { margin-bottom: 0; }
-    .btn { padding: 10px 20px; border: none; border-radius: var(--radius); font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-primary:hover { background: var(--secondary); }
-    .btn-block { width: 100%; }
-    .loading { text-align: center; padding: 40px; color: var(--gray); }
-    .loading-spinner { display: inline-block; width: 40px; height: 40px; border: 4px solid rgba(67, 97, 238, 0.2); border-radius: 50%; border-top-color: var(--primary); animation: spin 1s linear infinite; margin-bottom: 15px; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .notification { position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: var(--radius); box-shadow: var(--shadow); z-index: 1000; display: flex; align-items: center; gap: 10px; transform: translateX(150%); transition: transform 0.4s ease; }
-    .notification.show { transform: translateX(0); }
-    .notification-success { background: #d4edda; color: #155724; border-left: 4px solid #28a745; }
-    .notification-error { background: #f8d7da; color: #721c24; border-left: 4px solid #dc3545; }
-    .notification-icon { font-size: 1.2rem; }
-    @media (max-width: 768px) {
-      .products-grid { grid-template-columns: 1fr; }
-      .header-content { flex-direction: column; gap: 15px; align-items: flex-start; }
-    }
+    body { font-family: Arial, sans-serif; background: #f5f7fb; color: #212529; margin:0; padding:0;}
+    .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+    .product-card { background:white; padding:15px; border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:20px; }
+    .btn { padding:10px 20px; border:none; border-radius:var(--radius); cursor:pointer; background:var(--primary); color:white; font-weight:600; transition:0.3s; }
+    .btn:hover { background:#3f37c9; }
+    .products-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:20px; }
+    .product-header { display:flex; justify-content:space-between; margin-bottom:10px; }
+    .badge-success { background: rgba(76,201,240,0.2); color: var(--success); padding:3px 8px; border-radius:20px; font-size:0.75rem; }
+    .notification { position:fixed; top:20px; right:20px; padding:15px 20px; border-radius:var(--radius); box-shadow:var(--shadow); display:flex; gap:10px; transform:translateX(150%); transition: transform 0.4s ease; z-index:1000; }
+    .notification.show { transform:translateX(0); }
+    .notification-success { background:#d4edda; color:#155724; border-left:4px solid #28a745; }
+    .notification-error { background:#f8d7da; color:#721c24; border-left:4px solid #dc3545; }
   </style>
 </head>
 <body>
-  <header>
-    <div class="container">
-      <div class="header-content">
-        <h1>Painel Administrativo - Editar Produtos</h1>
-        <div class="status-bar">
-          <div class="status" id="status">Conectado</div>
-          <button class="refresh-btn" onclick="carregar()" title="Recarregar produtos">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
-              <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  </header>
-  
   <div class="container">
 
-   <!-- Formulário compacto de Novo Produto -->
-<div class="product-card" style="margin-bottom: 30px; padding: 15px;">
-  <h3 style="margin-bottom: 10px;">Adicionar Produto</h3>
-  <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-    <input type="text" id="novo_nome" placeholder="Nome" style="flex:2; padding:8px;" />
-    <input type="number" id="novo_preco" step="0.01" placeholder="Preço R$" style="flex:1; padding:8px;" />
-    <input type="text" id="novo_img" placeholder="Imagem" style="flex:1; padding:8px;" />
-    <div class="checkbox-group" style="align-items:center;">
-      <input type="checkbox" id="novo_mv" />
-      <label for="novo_mv">Mais vendido</label>
+    <!-- Botão único para adicionar produto aleatório -->
+    <div class="product-card">
+      <h3>Adicionar Produto Aleatório</h3>
+      <button class="btn btn-block" onclick="adicionarProdutoAleatorio()">Adicionar Produto</button>
     </div>
-    <button class="btn btn-primary" onclick="adicionarProduto()" style="flex:1; padding:8px;">
-      Adicionar
-    </button>
-  </div>
-</div>
-
 
     <!-- Lista de produtos existentes -->
     <div id="produtos">
-      <div class="loading">
-        <div class="loading-spinner"></div>
-        <p>Carregando produtos...</p>
-      </div>
+      <p>Carregando produtos...</p>
     </div>
+
   </div>
-  
-  <div id="notification" class="notification">
-    <span class="notification-icon"></span>
-    <span class="notification-message"></span>
-  </div>
+
+  <div id="notification" class="notification"></div>
 
   <script>
     const API = window.location.hostname === "localhost"
       ? "http://localhost:3000"
       : "https://tcc-uh9r.onrender.com";
 
-    async function carregar() {
-      try {
-        document.getElementById("produtos").innerHTML = `
-          <div class="loading">
-            <div class="loading-spinner"></div>
-            <p>Carregando produtos...</p>
-          </div>
-        `;
-        
-        const res = await fetch(API + "/api/produtos");
-        const produtos = await res.json();
-
-        let html = "";
-        if (produtos.length === 0) {
-          html = `<div style="text-align: center; padding: 40px; color: var(--gray);">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16" style="margin-bottom: 15px;">
-              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-              <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
-            </svg>
-            <h3>Nenhum produto encontrado</h3>
-            <p>Adicione produtos para começar a gerenciá-los.</p>
-          </div>`;
-        } else {
-          html = '<div class="products-grid">';
-          produtos.forEach(p => {
-            html += `
-              <div class="product-card">
-                <div class="product-header">
-                  <span class="product-id">ID: ${p.id}</span>
-                  ${p.mais_vendido ? '<span class="badge badge-success">Mais Vendido</span>' : ''}
-                </div>
-                <div class="form-group">
-                  <label for="nome_${p.id}">Nome do Produto</label>
-                  <input type="text" id="nome_${p.id}" value="${p.nome}" />
-                </div>
-                <div class="form-group">
-                  <label for="preco_${p.id}">Preço (R$)</label>
-                  <input type="number" step="0.01" id="preco_${p.id}" value="${p.preco}" />
-                </div>
-                <div class="form-group">
-                  <div class="checkbox-group">
-                    <input type="checkbox" id="mv_${p.id}" ${p.mais_vendido ? "checked" : ""} />
-                    <label for="mv_${p.id}">Produto mais vendido</label>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="img_${p.id}">Imagem (nome do arquivo)</label>
-                  <input type="text" id="img_${p.id}" value="${p.imagem || ''}" placeholder="ex: produto-1.jpg" />
-                </div>
-                <button class="btn btn-primary btn-block" onclick="salvar(${p.id})">
-                  Salvar Alterações
-                </button>
-              </div>
-            `;
-          });
-          html += '</div>';
-        }
-        document.getElementById("produtos").innerHTML = html;
-        showNotification('Produtos carregados com sucesso!', 'success');
-      } catch (err) {
-        console.error("Erro ao carregar produtos:", err);
-        document.getElementById("produtos").innerHTML = `<div style="text-align: center; padding: 40px; color: var(--danger);">
-          <h3>Erro ao carregar produtos</h3>
-          <button class="btn btn-primary" onclick="carregar()">Tentar Novamente</button>
-        </div>`;
-        showNotification('Erro ao carregar produtos', 'error');
-      }
+    // ---------- Funções ----------
+    function gerarNomeAleatorio() {
+      const nomes = ["Cookie", "Bolo", "Pão", "Torta", "Doce", "Brigadeiro"];
+      return nomes[Math.floor(Math.random() * nomes.length)] + " " + Math.floor(Math.random() * 1000);
     }
 
-    async function salvar(id) {
-      const nome = document.getElementById("nome_" + id).value;
-      const preco = parseFloat(document.getElementById("preco_" + id).value);
-      const mais_vendido = document.getElementById("mv_" + id).checked;
-      const imagem = document.getElementById("img_" + id).value;
-
-      if (!nome.trim()) { showNotification('Preencha o nome do produto', 'error'); return; }
-      if (isNaN(preco) || preco <= 0) { showNotification('Preço inválido', 'error'); return; }
-
-      try {
-        const response = await fetch(`${API}/produtos/${id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nome, preco, mais_vendido, imagem })
-        });
-        if (response.ok) {
-          showNotification('Produto atualizado!', 'success');
-          carregar();
-        } else { throw new Error('Erro na resposta do servidor'); }
-      } catch (err) {
-        console.error("Erro ao salvar produto:", err);
-        showNotification('Falha ao atualizar o produto', 'error');
-      }
+    function gerarPrecoAleatorio() {
+      return (Math.random() * 45 + 5).toFixed(2);
     }
 
-    async function adicionarProduto() {
-      const nome = document.getElementById("novo_nome").value;
-      const preco = parseFloat(document.getElementById("novo_preco").value);
-      const mais_vendido = document.getElementById("novo_mv").checked;
-      const imagem = document.getElementById("novo_img").value;
-
-      if (!nome.trim()) { showNotification('Preencha o nome do produto', 'error'); return; }
-      if (isNaN(preco) || preco <= 0) { showNotification('Preço inválido', 'error'); return; }
+    async function adicionarProdutoAleatorio() {
+      const produto = {
+        nome: gerarNomeAleatorio(),
+        preco: parseFloat(gerarPrecoAleatorio()),
+        mais_vendido: Math.random() < 0.5,
+        imagem: "produto-teste.jpg"
+      };
 
       try {
-        const response = await fetch(`${API}/api/produtos`, {
+        const res = await fetch(`${API}/api/produtos`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nome, preco, mais_vendido, imagem })
+          body: JSON.stringify(produto)
         });
-        if (response.ok) {
-          showNotification('Produto adicionado!', 'success');
-          document.getElementById("novo_nome").value = "";
-          document.getElementById("novo_preco").value = "";
-          document.getElementById("novo_mv").checked = false;
-          document.getElementById("novo_img").value = "";
-          carregar();
-        } else { throw new Error('Erro na resposta do servidor'); }
+
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || 'Erro na resposta do servidor');
+        }
+
+        const novoProduto = await res.json();
+        showNotification(`Produto "${novoProduto.nome}" adicionado!`, 'success');
+        carregar(); // recarrega lista de produtos
       } catch (err) {
         console.error("Erro ao adicionar produto:", err);
         showNotification('Falha ao adicionar o produto', 'error');
       }
     }
 
-    function showNotification(message, type) {
-      const notification = document.getElementById('notification');
-      const icon = notification.querySelector('.notification-icon');
-      const messageEl = notification.querySelector('.notification-message');
-      messageEl.textContent = message;
-      notification.className = 'notification';
-      if (type === 'success') {
-        notification.classList.add('notification-success');
-        icon.innerHTML = '✔️';
-      } else { 
-        notification.classList.add('notification-error'); 
-        icon.innerHTML = '❌';
+    async function carregar() {
+      try {
+        document.getElementById("produtos").innerHTML = `<p>Carregando produtos...</p>`;
+        const res = await fetch(API + "/api/produtos");
+        const produtos = await res.json();
+
+        let html = "";
+        if (produtos.length === 0) {
+          html = `<p>Nenhum produto encontrado.</p>`;
+        } else {
+          html = '<div class="products-grid">';
+          produtos.forEach(p => {
+            html += `
+              <div class="product-card">
+                <div class="product-header">
+                  <span>ID: ${p.id}</span>
+                  ${p.mais_vendido ? '<span class="badge-success">Mais Vendido</span>' : ''}
+                </div>
+                <div>Nome: ${p.nome}</div>
+                <div>Preço: R$ ${p.preco}</div>
+              </div>
+            `;
+          });
+          html += '</div>';
+        }
+        document.getElementById("produtos").innerHTML = html;
+
+      } catch (err) {
+        console.error("Erro ao carregar produtos:", err);
+        document.getElementById("produtos").innerHTML = `<p>Erro ao carregar produtos</p>`;
       }
-      notification.classList.add('show');
-      setTimeout(() => { notification.classList.remove('show'); }, 4000);
     }
 
+    function showNotification(message, type) {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.className = 'notification';
+      notification.classList.add(type === 'success' ? 'notification-success' : 'notification-error', 'show');
+      setTimeout(() => notification.classList.remove('show'), 4000);
+    }
+
+    // Inicial
     carregar();
   </script>
 </body>
 </html>
-
