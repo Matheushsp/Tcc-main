@@ -1,56 +1,145 @@
-import express from "express";
-import cors from "cors";
-import pg from "pg";
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Admin - Editar Produtos</title>
+  <style>
+    /* (SEU CSS TODINHO AQUI - NÃO MEXI NADA) */
+  </style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <div class="header-content">
+      <h1>Painel Administrativo - Editar Produtos</h1>
+      <div class="status-bar">
+        <button class="btn btn-primary" onclick="abrirAdd()">+ Adicionar Produto</button>
+        <button class="refresh-btn" onclick="carregar()" title="Recarregar produtos">🔄</button>
+      </div>
+    </div>
+  </div>
+</header>
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+<div class="container">
+  <!-- FORM ADD NOVO -->
+  <div id="formAdd" style="display:none; background:white; padding:20px; border-radius:8px; margin-bottom:25px; box-shadow:0 0 8px rgba(0,0,0,0.1)">
+    <h2 style="margin-bottom:15px">Adicionar Produto</h2>
 
-const pool = new pg.Pool({
-  connectionString: process.env.DATABASE_URL
-});
+    <div class="form-group">
+      <label>Nome</label>
+      <input id="add_nome" type="text">
+    </div>
 
-// LISTAR
-app.get("/api/produtos", async (req, res) => {
-  try {
-    const result = await pool.query("SELECT * FROM produtos ORDER BY id ASC");
-    res.json(result.rows);
-  } catch(err) {
-    res.status(500).json({erro:"erro ao listar"});
+    <div class="form-group">
+      <label>Preço (R$)</label>
+      <input id="add_preco" type="number" step="0.01">
+    </div>
+
+    <div class="form-group checkbox-group">
+      <input id="add_mv" type="checkbox">
+      <label>Mais Vendido</label>
+    </div>
+
+    <div class="form-group">
+      <label>Imagem (url)</label>
+      <input id="add_img" type="text" placeholder="https://...">
+    </div>
+
+    <button class="btn btn-primary btn-block" onclick="adicionar()">
+      Salvar Novo Produto
+    </button>
+  </div>
+
+  <div id="produtos">
+    <!-- carregando -->
+    <div class="loading">
+      <div class="loading-spinner"></div>
+      <p>Carregando produtos...</p>
+    </div>
+  </div>
+</div>
+
+<div id="notification" class="notification">
+  <span class="notification-icon"></span>
+  <span class="notification-message"></span>
+</div>
+
+<script>
+const API = window.location.hostname === "localhost"
+ ? "http://localhost:3000"
+ : "https://tcc-uh9r.onrender.com";
+
+function abrirAdd(){ document.getElementById("formAdd").style.display="block"; }
+
+async function adicionar(){
+  const nome = document.getElementById("add_nome").value;
+  const preco = parseFloat(document.getElementById("add_preco").value);
+  const mais_vendido = document.getElementById("add_mv").checked;
+  const imagem = document.getElementById("add_img").value;
+
+  if(!nome || isNaN(preco)){ showNotification("Preencha nome e preço","error"); return; }
+
+  const r = await fetch(API+"/produtos",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({ nome, preco, mais_vendido, imagem })
+  });
+
+  if(r.ok){
+    showNotification("Produto adicionado!","success");
+    document.getElementById("add_nome").value="";
+    document.getElementById("add_preco").value="";
+    document.getElementById("add_mv").checked=false;
+    document.getElementById("add_img").value="";
+    carregar();
+  }else{
+    showNotification("Erro ao adicionar","error");
   }
-});
+}
 
-// ATUALIZAR
-app.put("/produtos/:id", async (req,res)=>{
-  const { id } = req.params;
-  const { nome, preco, mais_vendido, imagem } = req.body;
+async function carregar(){
+  const res = await fetch(API+"/api/produtos");
+  const produtos = await res.json();
+  let html="<div class='products-grid'>";
+  produtos.forEach(p=>{
+    html+=`
+    <div class="product-card">
+      <div class="product-header"><span class="product-id">ID:${p.id}</span>${p.mais_vendido?'<span class="badge badge-success">Mais Vendido</span>':''}</div>
+      <div class="form-group"><label>Nome</label><input id="nome_${p.id}" value="${p.nome}"></div>
+      <div class="form-group"><label>Preço</label><input id="preco_${p.id}" type="number" step="0.01" value="${p.preco}"></div>
+      <div class="form-group checkbox-group"><input id="mv_${p.id}" type="checkbox" ${p.mais_vendido?'checked':''}><label>Mais vendido</label></div>
+      <div class="form-group"><label>Imagem</label><input id="img_${p.id}" value="${p.imagem||''}"></div>
+      <button class="btn btn-primary btn-block" onclick="salvar(${p.id})">Salvar</button>
+    </div>`;
+  })
+  html+="</div>";
+  document.getElementById("produtos").innerHTML=html;
+}
 
-  try {
-    await pool.query(
-      "UPDATE produtos SET nome=$1, preco=$2, mais_vendido=$3, imagem=$4 WHERE id=$5",
-      [nome, preco, mais_vendido, imagem, id]
-    );
-    res.json({ok:true});
-  } catch(err){
-    res.status(500).json({erro:"erro ao atualizar"});
-  }
-});
+async function salvar(id){
+  await fetch(API+"/produtos/"+id,{
+    method:"PUT",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      nome:document.getElementById("nome_"+id).value,
+      preco:parseFloat(document.getElementById("preco_"+id).value),
+      mais_vendido:document.getElementById("mv_"+id).checked,
+      imagem:document.getElementById("img_"+id).value
+    })
+  })
+  showNotification("Produto atualizado!","success");
+  carregar();
+}
 
-// ADICIONAR
-app.post("/produtos", async(req,res)=>{
-  const { nome, preco, mais_vendido, imagem } = req.body;
+function showNotification(text,type){
+  const box=document.getElementById("notification");
+  box.querySelector(".notification-message").innerText=text;
+  box.className="notification "+(type=="success"?"notification-success":"notification-error")+" show";
+  setTimeout(()=>box.classList.remove("show"),3000);
+}
 
-  try {
-    await pool.query(
-      "INSERT INTO produtos (nome, preco, mais_vendido, imagem) VALUES ($1,$2,$3,$4)",
-      [nome, preco, mais_vendido, imagem]
-    );
-    res.json({ok:true});
-  } catch(err){
-    res.status(500).json({erro:"erro ao adicionar"});
-  }
-});
-
-app.listen(process.env.PORT || 3000, () => {
-  console.log("API rodando");
-});
+carregar();
+</script>
+</body>
+</html>
