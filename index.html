@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -10,156 +10,36 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <meta property="og:type" content="website"/>
-  <meta property="og:title" content="cookies - O melhor !"/>
-  <meta property="og:image" content="https://projeto-cardapio-wine.vercel.app/assets/hamb-1.png"/>
-  <meta property="og:description" content="O melhor hamburuger caseiro de verdade!" />
-  <meta property="og:site_name" content="DevBuruger" /> 
   <link rel="stylesheet" href="./styles/output.css" />
   <link rel="stylesheet" href="./styles/style.css" />
-  <title>Big Jonh Cookies- A melhor da cidade !</title>
+  <title>Big John Cookies - A melhor da cidade!</title>
   <style>
-    .product-name {
-      margin-bottom: 10px; /* Adiciona espaço abaixo do nome do produto */
-    }
-
-    /* Estilos para o modal do carrinho */
-    #cart-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-
-    .modal-content {
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      width: 90%;
-      max-width: 500px;
-    }
-
-    .cart-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
-    }
-
-    .cart-item-details {
-      flex-grow: 1;
-      margin-right: 10px;
-    }
-
-    .cart-item-name {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-
-    .cart-item-quantity {
-      color: #666;
-    }
-
-    .cart-item-price {
-      font-weight: bold;
-      color: #333;
-    }
-
-    .remove-from-cart-btn {
-      background-color: #ff4d4d;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    /* Estilos para o botão do carrinho */
-    #cart-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: red;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      z-index: 1001;
-    }
-
-    /* Estilos para os itens do menu */
-    .menu-item {
-      border: 1px solid #ebe1e1;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 15px;
-      background-color: #ebe1e1;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .menu-item img {
-      border-radius: 8px;
-      width: 80px; /* Tamanho menor para a imagem */
-      height: 80px;
-    }
-
-    .menu-item-content {
-      padding: 10px;
-    }
-
-    .menu-item-content h3 {
-      margin-bottom: 10px;
-      font-size: 1.2em; /* Tamanho menor para o título */
-      color: #333;
-    }
-
-    .menu-item-content p {
-      margin-bottom: 10px;
-      font-size: 0.9em; /* Tamanho menor para a descrição */
-      color: #221515;
-    }
-
-    .menu-item-content .price {
-      font-weight: bold;
-      color: #333;
-      font-size: 1.1em; /* Tamanho menor para o preço */
-    }
-
-    .add-to-cart-btn {
-      background-color: #333;
-      color: white;
-      border: none;
-      padding: 8px 12px; /* Botão menor */
-      border-radius: 5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.9em; /* Tamanho menor para o texto do botão */
-    }
-
-    .add-to-cart-btn i {
-      font-size: 1em; /* Tamanho menor para o ícone */
-    }
+    body { font-family: 'Poppins', sans-serif; margin:0; padding:0; }
+    .menu-item { border: 1px solid #ebe1e1; border-radius: 8px; padding: 15px; margin-bottom: 15px; background-color: #ebe1e1; display:flex; gap:15px; }
+    .menu-item img { border-radius:8px; width:80px; height:80px; object-fit:cover; }
+    .menu-item-content h3 { margin-bottom:5px; font-size:1.2em; }
+    .menu-item-content p { margin-bottom:5px; font-size:0.9em; }
+    .menu-item-content .price { font-weight:bold; }
+    .add-to-cart-btn { background-color:#333; color:white; border:none; padding:8px 12px; border-radius:5px; cursor:pointer; display:flex; align-items:center; gap:5px; font-size:0.9em; }
+    .add-to-cart-btn i { font-size:1em; }
+    /* Modal e carrinho */
+    #cart-modal { position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); display:flex; justify-content:center; align-items:center; z-index:1000; }
+    .modal-content { background:white; padding:20px; border-radius:8px; width:90%; max-width:500px; }
+    .cart-item { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding:10px; border-bottom:1px solid #ddd; }
+    .cart-item-details { flex-grow:1; margin-right:10px; }
+    .cart-item-name { font-weight:bold; margin-bottom:5px; }
+    .cart-item-quantity { color:#666; }
+    .cart-item-price { font-weight:bold; color:#333; }
+    .remove-from-cart-btn { background:#ff4d4d; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; }
+    .hidden { display:none; }
+    #cart-btn { position:fixed; bottom:20px; right:20px; background-color:red; color:white; padding:10px 20px; border-radius:5px; cursor:pointer; z-index:1001; }
   </style>
 </head>
 <body>
-  <!-- Hotbar de Navegação -->
+  <!-- Hotbar -->
   <nav class="hotbar">
     <div class="container">
-      <a href="#" class="logo">loja de cookies</a>
+      <a href="#" class="logo">Loja de Cookies</a>
       <div class="nav-links">
         <a href="#" class="nav-link">Home</a>
         <a href="menu.html" class="nav-link">Cardápio</a>
@@ -167,207 +47,141 @@
     </div>
   </nav>
 
-  <!-- HEADER -->
+  <!-- Header -->
   <header class="w-full h-[420px] bg-zinc-900 bg-home bg-cover bg-center pt-16">
     <div class="w-full h-full flex flex-col justify-center items-center">
-      <img 
-        src="./assets/bigjohn.png"
-        alt="Logo DevBurguer"
-        class="w-32 h-32 rounded-full shadow-lg hover:scale-110 duration-200"
-      />
-      <h1 class="text-4xl mt-4 mb-2 font-bold text-white">
-       loja de cookies
-      </h1>
-      <span class="text-white font-medium">Rua roque de marco 189, vila industrial Campinas SP</span>
-      <div class="bg-green-600 px-4 py-1 rounded-lg mt-5" id="date-span">
-        <span class="text-white font-medium">Seg á sab - 08:00 as 18:00</span>
+      <img src="./assets/bigjohn.png" alt="Logo" class="w-32 h-32 rounded-full shadow-lg hover:scale-110 duration-200"/>
+      <h1 class="text-4xl mt-4 mb-2 font-bold text-white">Loja de Cookies</h1>
+      <span class="text-white font-medium">Rua Roque de Marco 189, Vila Industrial, Campinas SP</span>
+      <div class="bg-green-600 px-4 py-1 rounded-lg mt-5">
+        <span class="text-white font-medium">Seg á Sab - 08:00 as 18:00</span>
       </div>
     </div>
   </header>
 
-  <h2 class="text-2xl md:text-3xl font-bold text-center mt-9 mb-6">
-  Mais Vendidos
-</h2>
+  <!-- Mais Vendidos -->
+  <h2 class="text-2xl md:text-3xl font-bold text-center mt-9 mb-6">Mais Vendidos</h2>
+  <div id="mais-vendidos" class="grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-10 mx-auto max-w-7xl px-2 mb-16"></div>
 
-<main id="mais-vendidos" class="grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-10 mx-auto max-w-7xl px-2 mb-16">
-  
-</main>
-
-<script>
-async function carregarMaisVendidos() {
-  try {
-    const res = await fetch("https://tcc-uh9r.onrender.com/api/produtos");
-  
-    const API_PEDIDO = "https://tcc-uh9r.onrender.com/pedido"; // backend no Render
-    
-    const produtos = await res.json();
-
-    // converte 'mais_vendido' para boolean
-    const lista = produtos.filter(p => p.mais_vendido === true || p.mais_vendido === 't');
-
-    const container = document.getElementById("mais-vendidos");
-    container.innerHTML = "";
-
-    lista.forEach(p => {
-      const preco = parseFloat(p.preco); // garante que é número
-      container.innerHTML += `
-        <div class="menu-item">
-          <img 
-            src="./assets/cookies1.jpg"
-            class="w-28 h-28 rounded-md hover:scale-110 hover:-rotate-2 duration-300"
-          />
-          <div class="menu-item-content">
-            <h3>${p.nome}</h3>
-            <p>Cookies mais vendido!</p>
-            <div class="flex items-center gap-2 justify-between mt-3">
-              <p class="price">R$ ${preco.toFixed(2)}</p>
-              <button 
-                class="add-to-cart-btn"
-                data-name="${p.nome}"
-                data-price="${preco.toFixed(2)}"
-              >
-                <i class="fa fa-cart-plus"></i> Adicionar
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-    });
-
-    ativarBotoes(); // adiciona eventos aos botões após renderizar
-  } catch (err) {
-    console.error(err);
-    document.getElementById("mais-vendidos").innerHTML =
-      `<p style="color:#b91c1c">Não foi possível carregar os produtos.</p>`;
-  }
-}
-
-function ativarBotoes() {
-  const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
-  addToCartButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const name = button.getAttribute('data-name');
-      const price = button.getAttribute('data-price');
-      addToCart(name, price);
-    });
-  });
-}
-
-document.addEventListener('DOMContentLoaded', carregarMaisVendidos);
-
-
-</script>
-
-
-
-  <!-- MODAL CART -->
-  <div 
-    class="bg-black/60 w-full h-full fixed top-0 left-0 z-[99] items-center justify-center hidden"
-    id="cart-modal"
-  >
-    <div class="bg-white p-5 rounded-md min-w-[90%] md:min-w-[600px]">
-      <h2 class="text-center font-bold text-2xl mb-2">Meu carrinho</h2>
-      <div id="cart-items" class="flex justify-between mb-2 flex-col max-h-[400px] overflow-auto"></div>
+  <!-- Modal Carrinho -->
+  <div id="cart-modal" class="hidden">
+    <div class="modal-content">
+      <h2 class="text-center font-bold text-2xl mb-2">Meu Carrinho</h2>
+      <div id="cart-items" class="flex flex-col max-h-[400px] overflow-auto mb-2"></div>
       <p class="font-bold">Total: <span id="cart-total">0.00</span></p>
       <input id="cliente-nome" type="text" placeholder="Seu nome" class="border p-2 w-full mb-2 rounded" />
       <input id="cliente-telefone" type="tel" placeholder="Seu telefone" class="border p-2 w-full mb-4 rounded" />
       <p class="font-bold mt-4">Endereço de entrega:</p>
-      <input 
-        type="text"
-        placeholder="Digite seu endereço completo..."
-        id="address"
-        class="w-full border-2 p-1 rounded my-1"
-      />
+      <input type="text" placeholder="Digite seu endereço completo..." id="address" class="w-full border-2 p-1 rounded my-1"/>
       <p class="text-red-500 hidden" id="address-warn">Digite seu endereço completo!</p>
       <div class="flex items-center justify-between mt-5 w-full">
-        <button id="close-modal-btn">Fechar</button>
+        <button id="close-modal-btn" class="px-4 py-1 border rounded">Fechar</button>
         <button id="checkout-btn" class="bg-green-500 text-white px-4 py-1 rounded">Finalizar pedido</button>
       </div>
     </div>
   </div>
 
-  <!-- BUTTON CART FOOTER -->
-  <button 
-    class="flex items-center gap-2 text-white font-bold bg-red-500 px-4 py-2 rounded-lg fixed bottom-4 right-4 z-40"
-    id="cart-btn"
-  >
-    (<span id="cart-count">0</span>)
-    carrinho
-    <i class="fa fa-cart-plus text-lg text-white"></i>
+  <!-- Botão Carrinho -->
+  <button id="cart-btn" class="flex items-center gap-2 text-white font-bold bg-red-500 px-4 py-2 rounded-lg fixed bottom-4 right-4 z-40">
+    (<span id="cart-count">0</span>) Carrinho <i class="fa fa-cart-plus text-lg text-white"></i>
   </button>
 
+  <!-- Scripts -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
   <script>
-    // Variáveis globais
+    // Carrinho
     let cart = [];
     let total = 0;
 
-    // Função para adicionar item ao carrinho
-    function addToCart(name, price) {
-      const existingItem = cart.find(item => item.name === name);
+    async function carregarMaisVendidos() {
+      try {
+        const res = await fetch("https://tcc-uh9r.onrender.com/api/produtos");
+        const produtos = await res.json();
+        const lista = produtos.filter(p => p.mais_vendido === true || p.mais_vendido === 't');
 
-      if (existingItem) {
-        existingItem.quantity += 1;
-      } else {
-        cart.push({ name, price: parseFloat(price), quantity: 1 });
+        const container = document.getElementById("mais-vendidos");
+        container.innerHTML = "";
+
+        lista.forEach(p => {
+          const preco = parseFloat(p.preco);
+          container.innerHTML += `
+            <div class="menu-item">
+              <img src="./assets/cookies1.jpg" />
+              <div class="menu-item-content">
+                <h3>${p.nome}</h3>
+                <p>Cookies mais vendido!</p>
+                <div class="flex items-center gap-2 justify-between mt-3">
+                  <p class="price">R$ ${preco.toFixed(2)}</p>
+                  <button class="add-to-cart-btn" data-name="${p.nome}" data-price="${preco.toFixed(2)}">
+                    <i class="fa fa-cart-plus"></i> Adicionar
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        ativarBotoes();
+      } catch(err) {
+        console.error(err);
+        document.getElementById("mais-vendidos").innerHTML =
+          `<p style="color:#b91c1c">Não foi possível carregar os produtos.</p>`;
       }
+    }
 
+    function ativarBotoes() {
+      document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          addToCart(button.getAttribute('data-name'), button.getAttribute('data-price'));
+        });
+      });
+    }
+
+    function addToCart(name, price) {
+      const existing = cart.find(i => i.name === name);
+      if(existing) existing.quantity++;
+      else cart.push({ name, price: parseFloat(price), quantity: 1 });
       updateCartModal();
     }
 
-    // Função para atualizar o carrinho
-    function updateCartModal() {
-      const cartItems = document.getElementById('cart-items');
-      const cartTotal = document.getElementById('cart-total');
-      const cartCount = document.getElementById('cart-count');
-
-      cartItems.innerHTML = '';
-      total = 0;
-
-      cart.forEach(item => {
-        const itemElement = document.createElement('div');
-        itemElement.classList.add('cart-item');
-        itemElement.innerHTML = `
-          <div class="cart-item-details">
-            <p class="cart-item-name">${item.name}</p>
-            <p class="cart-item-quantity">Qtd: ${item.quantity}</p>
-          </div>
-          <p class="cart-item-price">R$ ${(item.price * item.quantity).toFixed(2)}</p>
-          <button class="remove-from-cart-btn" data-name="${item.name}">Remover</button>
-        `;
-
-        total += item.price * item.quantity;
-        cartItems.appendChild(itemElement);
-      });
-
-      cartTotal.textContent = total.toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-      });
-
-      cartCount.textContent = cart.length;
-    }
-
-    // Função para remover item do carrinho
     function removeItemCart(name) {
-      const index = cart.findIndex(item => item.name === name);
-
-      if (index !== -1) {
-        const item = cart[index];
-
-        if (item.quantity > 1) {
-          item.quantity -= 1;
-        } else {
-          cart.splice(index, 1);
-        }
-
+      const index = cart.findIndex(i => i.name === name);
+      if(index !== -1){
+        if(cart[index].quantity > 1) cart[index].quantity--;
+        else cart.splice(index,1);
         updateCartModal();
       }
     }
 
-    // Event listeners
+    function updateCartModal() {
+      const cartItems = document.getElementById('cart-items');
+      const cartTotal = document.getElementById('cart-total');
+      const cartCount = document.getElementById('cart-count');
+      cartItems.innerHTML = '';
+      total = 0;
+
+      cart.forEach(item => {
+        const div = document.createElement('div');
+        div.classList.add('cart-item');
+        div.innerHTML = `
+          <div class="cart-item-details">
+            <p class="cart-item-name">${item.name}</p>
+            <p class="cart-item-quantity">Qtd: ${item.quantity}</p>
+          </div>
+          <p class="cart-item-price">R$ ${(item.price*item.quantity).toFixed(2)}</p>
+          <button class="remove-from-cart-btn" data-name="${item.name}">Remover</button>
+        `;
+        total += item.price * item.quantity;
+        cartItems.appendChild(div);
+      });
+
+      cartTotal.textContent = total.toLocaleString('pt-BR', { style:'currency', currency:'BRL' });
+      cartCount.textContent = cart.length;
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
-      const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+      carregarMaisVendidos();
+
       const cartBtn = document.getElementById('cart-btn');
       const closeModalBtn = document.getElementById('close-modal-btn');
       const checkoutBtn = document.getElementById('checkout-btn');
@@ -375,92 +189,51 @@ document.addEventListener('DOMContentLoaded', carregarMaisVendidos);
       const addressInput = document.getElementById('address');
       const addressWarn = document.getElementById('address-warn');
 
-      // Adicionar item ao carrinho
-      addToCartButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          const name = button.getAttribute('data-name');
-          const price = button.getAttribute('data-price');
-          addToCart(name, price);
-        });
-      });
-
-      // Abrir modal do carrinho
       cartBtn.addEventListener('click', () => {
         updateCartModal();
         document.getElementById('cart-modal').classList.remove('hidden');
       });
 
-      // Fechar modal do carrinho
       closeModalBtn.addEventListener('click', () => {
         document.getElementById('cart-modal').classList.add('hidden');
       });
 
-      // Remover item do carrinho
-      cartItemsContainer.addEventListener('click', event => {
-        if (event.target.classList.contains('remove-from-cart-btn')) {
-          const name = event.target.getAttribute('data-name');
-          removeItemCart(name);
+      cartItemsContainer.addEventListener('click', e => {
+        if(e.target.classList.contains('remove-from-cart-btn')){
+          removeItemCart(e.target.getAttribute('data-name'));
         }
       });
 
-      // Finalizar pedido
-     checkoutBtn.addEventListener('click', async () => {
-  if (cart.length === 0) return;
+      checkoutBtn.addEventListener('click', () => {
+        if(cart.length === 0) return;
 
-  const clienteNome = document.getElementById('cliente-nome').value;
-  const clienteTelefone = document.getElementById('cliente-telefone').value;
-  const endereco = addressInput.value;
+        const clienteNome = document.getElementById('cliente-nome').value;
+        const clienteTelefone = document.getElementById('cliente-telefone').value;
+        const endereco = addressInput.value;
 
-  if (!endereco || !clienteNome || !clienteTelefone) {
-    addressWarn.classList.remove('hidden');
-    addressInput.classList.add('border-red-500');
-    return;
-  }
+        if(!clienteNome || !clienteTelefone || !endereco){
+          addressWarn.classList.remove('hidden');
+          addressInput.classList.add('border-red-500');
+          return;
+        }
 
-  const pedido = {
-    cliente_nome: clienteNome,
-    cliente_telefone: clienteTelefone,
-    itens: cart,
-    total: total,
-    endereco: endereco
-  };
+        const itensMsg = cart.map(item => `${item.name} (x${item.quantity}) - R$${item.price.toFixed(2)}`).join('\n');
+        const msg = encodeURIComponent(
+          `🍪 Novo Pedido Big John Cookies:\n\n` +
+          `👤 Nome: ${clienteNome}\n` +
+          `📞 Telefone: ${clienteTelefone}\n` +
+          `📦 Pedido:\n${itensMsg}\n\n` +
+          `📍 Endereço: ${endereco}\n` +
+          `💰 Total: R$ ${total.toFixed(2)}`
+        );
 
-  try {
-    const response = await fetch('https://tcc-uh9r.onrender.com/pedido', {
+        const phone = '19986058820';
+        window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
 
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(pedido)
-    });
-
-    if (!response.ok) throw new Error('Erro ao salvar pedido.');
-
-    // Sucesso — abrir WhatsApp
-    const itensMsg = cart.map(item =>
-      `${item.name} (x${item.quantity}) - R$${item.price.toFixed(2)}`
-    ).join('\n');
-
-    const msg = encodeURIComponent(
-      `🍪 Novo Pedido Big John Cookies:\n\n` +
-      `👤 Nome: ${clienteNome}\n` +
-      `📞 Telefone: ${clienteTelefone}\n` +
-      `📦 Pedido:\n${itensMsg}\n\n` +
-      `📍 Endereço: ${endereco}\n` +
-      `💰 Total: R$ ${total.toFixed(2)}`
-    );
-
-    const phone = '19986058820'; // Seu número com DDD
-    window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
-
-    // Resetar carrinho
-    cart = [];
-    updateCartModal();
-    document.getElementById('cart-modal').classList.add('hidden');
-  } catch (error) {
-    alert('Erro ao enviar pedido. Tente novamente.');
-    console.error(error);
-  }
-});
+        cart = [];
+        updateCartModal();
+        document.getElementById('cart-modal').classList.add('hidden');
+      });
     });
   </script>
 </body>
