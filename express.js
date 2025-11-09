@@ -1,151 +1,56 @@
-const express = require("express");
-const cors = require("cors");
-const pg = require("pg");
-const bcrypt = require("bcrypt");
+import express from "express";
+import cors from "cors";
+import pg from "pg";
 
 const app = express();
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 
-// Configuração do PostgreSQL (Neon)
 const pool = new pg.Pool({
-  user: "neondb_owner",
-  host: "ep-nameless-bread-acptp2tf-pooler.sa-east-1.aws.neon.tech",
-  database: "neondb",
-  password: "npg_ze3wKOsAar4u",
-  port: 5432,
-  ssl: { rejectUnauthorized: false }
+  connectionString: process.env.DATABASE_URL
 });
 
-// Garante que sempre usa o schema cardapio_db
-pool.query(`SET search_path TO cardapio_db`);
-
-// ====================== LOGIN ======================
-app.post("/login", async (req, res) => {
-  const { username, senha } = req.body;
-
-  if (!username || !senha) return res.status(400).json({ erro: "Usuário e senha obrigatórios" });
-
+// LISTAR
+app.get("/api/produtos", async (req, res) => {
   try {
-    const r = await pool.query("SELECT * FROM usuario WHERE username=$1", [username]);
-    if (r.rowCount === 0) return res.status(401).json({ erro: "Usuário não encontrado" });
-
-    const user = r.rows[0];
-    const senhaOk = await bcrypt.compare(senha, user.senha);
-    if (!senhaOk) return res.status(401).json({ erro: "Senha incorreta" });
-
-    res.json({ ok: true, username: user.username });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ erro: "Erro interno do servidor" });
+    const result = await pool.query("SELECT * FROM produtos ORDER BY id ASC");
+    res.json(result.rows);
+  } catch(err) {
+    res.status(500).json({erro:"erro ao listar"});
   }
 });
 
-// ====================== PRODUTOS ======================
-
-// Listar todos os produtos
-app.get("/produtos", async (req, res) => {
-  try {
-    const r = await pool.query("SELECT * FROM produtos ORDER BY id");
-    res.json(r.rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ erro: "Erro ao buscar produtos" });
-  }
-});
-
-// Atualizar produto
-app.put("/produtos/:id", async (req, res) => {
+// ATUALIZAR
+app.put("/produtos/:id", async (req,res)=>{
   const { id } = req.params;
-  const { nome, preco, mais_vendido } = req.body;
+  const { nome, preco, mais_vendido, imagem } = req.body;
 
   try {
     await pool.query(
-      "UPDATE produtos SET nome=$1, preco=$2, mais_vendido=$3 WHERE id=$4",
-      [nome, preco, mais_vendido, id]
+      "UPDATE produtos SET nome=$1, preco=$2, mais_vendido=$3, imagem=$4 WHERE id=$5",
+      [nome, preco, mais_vendido, imagem, id]
     );
-    res.json({ ok: true });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ erro: "Erro ao atualizar produto" });
+    res.json({ok:true});
+  } catch(err){
+    res.status(500).json({erro:"erro ao atualizar"});
   }
 });
 
-// Rota compatível com front
-app.get("/api/produtos", async (req, res) => {
-  try {
-    const r = await pool.query("SELECT id, nome, preco, mais_vendido FROM produtos ORDER BY id");
-    res.json(r.rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ erro: "Erro ao buscar produtos" });
-  }
-});
-
-// CRIAR PRODUTO
-app.post('/api/produtos', async (req, res) => {
-  try {
-    let { nome, preco, mais_vendido, imagem } = req.body;
-
-    if (!nome || typeof nome !== 'string' || !nome.trim()) {
-      return res.status(400).json({ error: 'Nome do produto obrigatório' });
-    }
-    preco = parseFloat(preco);
-    if (isNaN(preco) || preco <= 0) {
-      return res.status(400).json({ error: 'Preço inválido' });
-    }
-    mais_vendido = !!mais_vendido;
-    imagem = imagem && typeof imagem === 'string' ? imagem : null;
-
-    const query = `
-      INSERT INTO produtos (nome, preco, mais_vendido, imagem)
-      VALUES ($1, $2, $3, $4)
-      RETURNING *;
-    `;
-    const values = [nome, preco, mais_vendido, imagem];
-
-    const result = await pool.query(query, values);
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
-    console.error('Erro ao adicionar produto:', err);
-    res.status(500).json({ error: 'Erro ao adicionar produto', details: err.message });
-  }
-});
-
-// ====================== PEDIDO ======================
-
-// Listar pedidos
-app.get("/pedido", async (req, res) => {
-  try {
-    const r = await pool.query("SELECT * FROM pedido ORDER BY id DESC");
-    res.json(r.rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ erro: "Erro ao buscar pedidos" });
-  }
-});
-
-// Criar pedido
-app.post("/pedido", async (req, res) => {
-  const { cliente_nome, cliente_telefone, itens, total, endereco } = req.body;
-
-  if (!cliente_nome || !cliente_telefone || !itens || !total || !endereco) {
-    return res.status(400).json({ erro: "Dados do pedido incompletos" });
-  }
+// ADICIONAR
+app.post("/produtos", async(req,res)=>{
+  const { nome, preco, mais_vendido, imagem } = req.body;
 
   try {
-    const r = await pool.query(
-      `INSERT INTO pedido (cliente_nome, cliente_telefone, itens, total, endereco)
-       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [cliente_nome, cliente_telefone, JSON.stringify(itens), total, endereco]
+    await pool.query(
+      "INSERT INTO produtos (nome, preco, mais_vendido, imagem) VALUES ($1,$2,$3,$4)",
+      [nome, preco, mais_vendido, imagem]
     );
-    res.status(201).json(r.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ erro: "Erro ao salvar pedido" });
+    res.json({ok:true});
+  } catch(err){
+    res.status(500).json({erro:"erro ao adicionar"});
   }
 });
 
-// ====================== INÍCIO DO SERVIDOR ======================
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`API rodando na porta ${PORT}`));
+app.listen(process.env.PORT || 3000, () => {
+  console.log("API rodando");
+});
