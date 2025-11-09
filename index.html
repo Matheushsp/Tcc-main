@@ -185,165 +185,77 @@
     </div>
   </header>
 
-  <!-- MENU -->
   <h2 class="text-2xl md:text-3xl font-bold text-center mt-9 mb-6">
-    Mais Vendidos
-  </h2>
+  Mais Vendidos
+</h2>
 
-  <div id="menu">
-    <main class="grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-10 mx-auto max-w-7xl px-2 mb-16">
-      <!-- PRODUTO ITEM -->
-      <div class="menu-item">
-        <img 
-          src="./assets/cookies2.jpg"
-          alt="Hamburuger Smash"
-          class="w-28 h-28 rounded-md hover:scale-110 hover:-rotate-2 duration-300"
-        />
-        <div class="menu-item-content">
-          <h3>Smash</h3>
-          <p>Pão levinho de fermentação natural .</p>
-          <div class="flex items-center gap-2 justify-between mt-3">
-            <p class="price">R$ 18.80</p>
-            <button 
-              class="add-to-cart-btn"
-              data-name="Smash"
-              data-price="18.80"
-            >
-              <i class="fa fa-cart-plus"></i> Adicionar
-            </button>
+<main id="mais-vendidos" class="grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-10 mx-auto max-w-7xl px-2 mb-16">
+  
+</main>
+
+<script>
+async function carregarMaisVendidos() {
+  try {
+    const res = await fetch("https://tcc-uh9r.onrender.com/api/produtos");
+    const produtos = await res.json();
+
+    // converte 'mais_vendido' para boolean
+    const lista = produtos.filter(p => p.mais_vendido === true || p.mais_vendido === 't');
+
+    const container = document.getElementById("mais-vendidos");
+    container.innerHTML = "";
+
+    lista.forEach(p => {
+      const preco = parseFloat(p.preco); // garante que é número
+      container.innerHTML += `
+        <div class="menu-item">
+          <img 
+            src="./assets/cookies1.jpg"
+            class="w-28 h-28 rounded-md hover:scale-110 hover:-rotate-2 duration-300"
+          />
+          <div class="menu-item-content">
+            <h3>${p.nome}</h3>
+            <p>Cookies mais vendido!</p>
+            <div class="flex items-center gap-2 justify-between mt-3">
+              <p class="price">R$ ${preco.toFixed(2)}</p>
+              <button 
+                class="add-to-cart-btn"
+                data-name="${p.nome}"
+                data-price="${preco.toFixed(2)}"
+              >
+                <i class="fa fa-cart-plus"></i> Adicionar
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <!-- FIM PRODUTO ITEM -->
+      `;
+    });
 
-      <!-- PRODUTO ITEM -->
-      <div class="menu-item">
-        <img 
-          src="./assets/cookies1.jpg"
-          alt="cookies Duplo"
-          class="w-28 h-28 rounded-md hover:scale-110 hover:-rotate-2 duration-300"
-        />
-        <div class="menu-item-content">
-          <h3>Duplo</h3>
-          <p>Pão levinho de fermentação natural .</p>
-          <div class="flex items-center gap-2 justify-between mt-3">
-            <p class="price">R$ 32.80</p>
-            <button 
-              class="add-to-cart-btn"
-              data-name="Duplo"
-              data-price="32.80"
-            >
-              <i class="fa fa-cart-plus"></i> Adicionar
-            </button>
-          </div>
-        </div>
-      </div>
-      <!-- FIM PRODUTO ITEM -->
+    ativarBotoes(); // adiciona eventos aos botões após renderizar
+  } catch (err) {
+    console.error(err);
+    document.getElementById("mais-vendidos").innerHTML =
+      `<p style="color:#b91c1c">Não foi possível carregar os produtos.</p>`;
+  }
+}
 
-      <!-- PRODUTO ITEM -->
-      <div class="menu-item">
-        <img 
-          src="./assets/cookies1.jpg"
-          alt="cokkies Salad"
-          class="w-28 h-28 rounded-md hover:scale-110 hover:-rotate-2 duration-300"
-        />
-        <div class="menu-item-content">
-          <h3>Doce</h3>
-          <p>Pão levinho de fermentação natural .</p>
-          <div class="flex items-center gap-2 justify-between mt-3">
-            <p class="price">R$ 35.80</p>
-            <button 
-              class="add-to-cart-btn"
-              data-name="Doce"
-              data-price="35.80"
-            >
-              <i class="fa fa-cart-plus"></i> Adicionar
-            </button>
-          </div>
-        </div>
-      </div>
-      <!-- FIM PRODUTO ITEM -->
+function ativarBotoes() {
+  const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+  addToCartButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const name = button.getAttribute('data-name');
+      const price = button.getAttribute('data-price');
+      addToCart(name, price);
+    });
+  });
+}
 
-      <!-- PRODUTO ITEM -->
-      <div class="menu-item">
-        <img 
-          src="./assets/cookies1.jpg"
-          alt="Hamburuger da casa"
-          class="w-28 h-28 rounded-md hover:scale-110 hover:-rotate-2 duration-300"
-        />
-        <div class="menu-item-content">
-          <h3>Cookies da Casa</h3>
-          <p>Pão levinho de fermentação natural .</p>
-          <div class="flex items-center gap-2 justify-between mt-3">
-            <p class="price">R$ 30</p>
-            <button 
-              class="add-to-cart-btn"
-              data-name="Cookies da Casa"
-              data-price="30"
-            >
-              <i class="fa fa-cart-plus"></i> Adicionar
-            </button>
-          </div>
-        </div>
-      </div>
-      <!-- FIM PRODUTO ITEM -->
-    </main>
+document.addEventListener('DOMContentLoaded', carregarMaisVendidos);
 
-    <!-- BEBIDAS -->
-    <div class="mx-auto max-w-7xl px-2 my-2">
-      <h2 class="font-bold text-3xl">
-        Bebidas
-      </h2>
-    </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-10 mx-auto max-w-7xl px-2 mb-16" id="menu">
-      <!-- BEBIDA ITEM -->
-      <div class="menu-item">
-        <img 
-          src="./assets/refri-1.png"
-          alt="Coca lata"
-          class="w-28 h-28 rounded-md hover:scale-110 hover:-rotate-2 duration-300"
-        />
-        <div class="menu-item-content">
-          <h3>Coca lata</h3>
-          <div class="flex items-center gap-2 justify-between mt-3">
-            <p class="price">R$ 8</p>
-            <button 
-              class="add-to-cart-btn"
-              data-name="Coca lata"
-              data-price="8"
-            >
-              <i class="fa fa-cart-plus"></i> Adicionar
-            </button>
-          </div>
-        </div>
-      </div>
-      <!-- FIM BEBIDA ITEM -->
+</script>
 
-      <!-- BEBIDA ITEM -->
-      <div class="menu-item">
-        <img 
-          src="./assets/refri-2.png"
-          alt="Guaraná lata"
-          class="w-28 h-28 rounded-md hover:scale-110 hover:-rotate-2 duration-300"
-        />
-        <div class="menu-item-content">
-          <h3>Guaraná lata</h3>
-          <div class="flex items-center gap-2 justify-between mt-3">
-            <p class="price">R$ 8</p>
-            <button 
-              class="add-to-cart-btn"
-              data-name="Guaraná lata"
-              data-price="8"
-            >
-              <i class="fa fa-cart-plus"></i> Adicionar
-            </button>
-          </div>
-        </div>
-      </div>
-      <!-- FIM BEBIDA ITEM -->
-    </div>
-  </div>
+
 
   <!-- MODAL CART -->
   <div 
