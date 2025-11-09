@@ -1,266 +1,357 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Cardápio - Big John Cookies"/>
+  <meta property="og:image" content="https://projeto-cardapio-wine.vercel.app/assets/hamb-1.png"/>
+  <meta property="og:description" content="Confira nosso delicioso cardápio de cookies!" />
+  <meta property="og:site_name" content="Big John Cookies" /> 
   <link rel="stylesheet" href="./styles/output.css" />
   <link rel="stylesheet" href="./styles/style.css" />
   <title>Cardápio - Big John Cookies</title>
   <style>
-    body { font-family: 'Poppins', Arial, sans-serif; margin:0; padding:0; }
-    .container { max-width:1100px; margin: 0 auto; padding: 20px; }
-    .hotbar { background:#fff; border-bottom:1px solid #eee; padding:12px 0; }
-    .logo { font-weight:700; margin-right:16px; text-decoration:none; color:#333; }
-    .menu-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:18px; margin-top:18px; }
-    .menu-item { background:#fff; border:1px solid #eee; border-radius:10px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.04); }
-    .menu-item img { width:100%; height:150px; object-fit:cover; display:block; }
-    .menu-item-content { padding:12px; }
-    .menu-item-content h3 { margin:0 0 8px 0; font-size:18px; }
-    .price { font-weight:700; margin:6px 0; }
-    .add-to-cart-btn { background:#e11d48; color:#fff; border:none; padding:8px 10px; border-radius:6px; cursor:pointer; width:100%; }
-    #cart-modal { position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.45); z-index:9999; }
-    .modal-content { background:#fff; width:95%; max-width:520px; border-radius:8px; padding:16px; box-shadow: 0 6px 24px rgba(0,0,0,0.2); }
-    .cart-item { display:flex; justify-content:space-between; gap:10px; padding:10px 0; align-items:center; border-bottom:1px solid #eee; }
-    .remove-from-cart-btn { background:#ff4d4d; color:#fff; border:none; padding:6px 8px; border-radius:6px; cursor:pointer; }
-    #cart-btn { position:fixed; bottom:20px; right:20px; background:#ef4444; color:#fff; padding:10px 16px; border-radius:8px; border:none; cursor:pointer; z-index:10000; }
-    input[type="text"], input[type="tel"], input[type="number"] { padding:8px; border:1px solid #ddd; border-radius:6px; width:100%; box-sizing:border-box; }
-    .hidden { display:none; }
+    /* Estilos para o modal do carrinho */
+    #cart-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .cart-item-details {
+      flex-grow: 1;
+      margin-right: 10px;
+    }
+
+    .cart-item-name {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .cart-item-quantity {
+      color: #666;
+    }
+
+    .cart-item-price {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .remove-from-cart-btn {
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Estilos para o botão do carrinho */
+    #cart-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: red;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1001;
+    }
   </style>
 </head>
 <body>
+  <!-- Hotbar de Navegação -->
   <nav class="hotbar">
-    <div class="container" style="display:flex; align-items:center; justify-content:space-between;">
-      <div style="display:flex;align-items:center;">
-        <a class="logo" href="#">Big John Cookies</a>
-      </div>
-      <div>
-        <a href="index.html" style="text-decoration:none;color:#23047e">Home</a>
+    <div class="container">
+      <a href="#" class="logo">Cookies</a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
       </div>
     </div>
   </nav>
 
+  <!-- Conteúdo Principal -->
   <div class="container">
-    <h1 style="text-align:center; margin-top:18px;">Cardápio</h1>
-    <div class="menu-grid" id="menu-list"></div>
-  </div>
+    <h1 class="text-4xl mt-4 mb-2 font-bold text-center">Cardápio</h1>
 
-  <div id="cart-modal" class="hidden" aria-hidden="true">
-    <div class="modal-content">
-      <h2 style="text-align:center; margin:0 0 12px 0;">Meu Carrinho</h2>
-      <div id="cart-items" style="max-height:300px; overflow:auto;"></div>
-      <p style="font-weight:700; margin-top:12px;">Total: <span id="cart-total">R$ 0,00</span></p>
-      <input id="cliente-nome" type="text" placeholder="Seu nome" class="mb-2" style="margin-top:8px;" />
-      <input id="cliente-telefone" type="tel" placeholder="Seu telefone" class="mb-2" style="margin-top:8px;" />
-      <p style="font-weight:700; margin-top:12px;">Endereço de entrega:</p>
-      <input type="text" placeholder="Digite seu endereço completo..." id="address" style="margin-top:8px;" />
-      <p class="text-red-500 hidden" id="address-warn" style="color:#b91c1c; margin:6px 0 0 0;">Digite seu endereço completo!</p>
-      <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:12px;">
-        <button id="close-modal-btn" style="padding:8px 12px; border-radius:6px; border:1px solid #ddd; background:#fff; cursor:pointer;">Fechar</button>
-        <button id="checkout-btn" style="padding:8px 12px; border-radius:6px; background:#16a34a; color:#fff; border:none; cursor:pointer;">Finalizar Pedido</button>
+    <!-- Itens do Cardápio -->
+    <div class="menu-grid">
+      <!-- Item 1 -->
+      <div class="menu-item">
+        <img src="./assets/cookies1.jpg" alt="Cookie de Chocolate">
+        <div class="menu-item-content">
+          <h3>Cookie de Chocolate</h3>
+          <p>Delicioso cookie com gotas de chocolate meio amargo.</p>
+          <p class="price">R$ 5,00</p>
+          <button class="add-to-cart-btn" data-name="Cookie de Chocolate" data-price="5.00">Adicionar ao Carrinho</button>
+        </div>
+      </div>
+
+      <!-- Item 2 -->
+      <div class="menu-item">
+        <img src="./assets/cookies2.jpg" alt="Cookie de Baunilha">
+        <div class="menu-item-content">
+          <h3>Cookie de Baunilha</h3>
+          <p>Cookie suave com essência de baunilha e confeitos coloridos.</p>
+          <p class="price">R$ 5,00</p>
+          <button class="add-to-cart-btn" data-name="Cookie de Baunilha" data-price="5.00">Adicionar ao Carrinho</button>
+        </div>
+      </div>
+
+      <!-- Item 3 -->
+      <div class="menu-item">
+        <img src="./assets/cookies3.jpg" alt="Cookie de Nutella">
+        <div class="menu-item-content">
+          <h3>Cookie de Nutella</h3>
+          <p>Cookie recheado com Nutella e pedaços de avelã.</p>
+          <p class="price">R$ 6,00</p>
+          <button class="add-to-cart-btn" data-name="Cookie de Nutella" data-price="6.00">Adicionar ao Carrinho</button>
+        </div>
+      </div>
+
+      <!-- Item 4 -->
+      <div class="menu-item">
+        <img src="./assets/cookies4.jpg" alt="Cookie de Red Velvet">
+        <div class="menu-item-content">
+          <h3>Cookie de Red Velvet</h3>
+          <p>Cookie com massa vermelha e gotas de chocolate branco.</p>
+          <p class="price">R$ 6,00</p>
+          <button class="add-to-cart-btn" data-name="Cookie de Red Velvet" data-price="6.00">Adicionar ao Carrinho</button>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- Modal do Carrinho -->
+  <div id="cart-modal" class="hidden">
+    <div class="modal-content">
+      <h2 class="text-center font-bold text-2xl mb-2">Meu Carrinho</h2>
+      <div id="cart-items"></div>
+      <p class="font-bold">Total: <span id="cart-total">R$ 0,00</span></p>
+      <input id="cliente-nome" type="text" placeholder="Seu nome" class="border p-2 w-full mb-2 rounded" />
+      <input id="cliente-telefone" type="tel" placeholder="Seu telefone" class="border p-2 w-full mb-4 rounded" />
+      <p class="font-bold mt-4">Endereço de entrega:</p>
+      <input 
+        type="text"
+        placeholder="Digite seu endereço completo..."
+        id="address"
+        class="w-full border-2 p-1 rounded my-1"
+      />
+      <p class="text-red-500 hidden" id="address-warn">Digite seu endereço completo!</p>
+      <div class="flex items-center justify-between mt-5 w-full">
+        <button id="close-modal-btn">Fechar</button>
+        <button id="checkout-btn" class="bg-green-500 text-white px-4 py-1 rounded">Finalizar Pedido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botão do Carrinho no Footer -->
   <button id="cart-btn">Carrinho (<span id="cart-count">0</span>)</button>
 
+  <!-- Scripts -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-
   <script>
-  (function () {
-    const API_PRODUTOS = "https://tcc-uh9r.onrender.com/api/produtos";
-    const API_PEDIDO = "https://tcc-uh9r.onrender.com/pedido";
-
+    // Variáveis globais
     let cart = [];
     let total = 0;
 
-    function formatBRL(value) {
-      return Number(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    }
+    // Função para adicionar item ao carrinho
+    function addToCart(name, price) {
+      const existingItem = cart.find(item => item.name === name);
 
-    function escapeHtml(str) {
-      if (!str) return '';
-      return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;").replace(/'/g,"&#039;");
-    }
-
-    async function carregarProdutos() {
-      try {
-        const resp = await fetch(API_PRODUTOS);
-        if (!resp.ok) throw new Error('Erro ao buscar produtos: ' + resp.status);
-        const lista = await resp.json();
-        const menuList = document.getElementById("menu-list");
-        menuList.innerHTML = "";
-
-        const imagens = [
-          './assets/cookies1.jpg','./assets/cookies2.jpg',
-          './assets/cookies3.jpg','./assets/cookies4.jpg'
-        ];
-
-        lista.forEach((p, idx) => {
-          const imgSrc = imagens[idx % imagens.length];
-          const preco = Number(p.preco).toFixed(2);
-          const card = document.createElement('div');
-          card.className = 'menu-item';
-          card.innerHTML = `
-            <img src="${imgSrc}" alt="${escapeHtml(p.nome)}">
-            <div class="menu-item-content">
-              <h3>${escapeHtml(p.nome)}</h3>
-              <p class="price">${formatBRL(preco)}</p>
-              <button class="add-to-cart-btn" data-id="${p.id}" data-name="${escapeHtml(p.nome)}" data-price="${preco}">Adicionar ao Carrinho</button>
-            </div>
-          `;
-          menuList.appendChild(card);
-        });
-
-        document.querySelectorAll(".add-to-cart-btn").forEach(btn => {
-          btn.addEventListener('click', () => addToCart(btn.dataset.id, btn.dataset.name, btn.dataset.price));
-        });
-
-      } catch (err) {
-        console.error(err);
-        document.getElementById("menu-list").innerHTML = `<p style="color:#b91c1c">Não foi possível carregar o cardápio.</p>`;
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({ name, price: parseFloat(price), quantity: 1 });
       }
-    }
 
-    function addToCart(id, name, price) {
-      price = Number(price);
-      const existing = cart.find(i => String(i.id) === String(id));
-      if (existing) existing.quantity += 1;
-      else cart.push({ id, name, price, quantity: 1 });
-      updateCartModal();
-      Toastify({ text: `${name} adicionado ao carrinho`, duration: 1600 }).showToast();
-    }
-
-    function removeItemCart(id) {
-      const idx = cart.findIndex(i => String(i.id) === String(id));
-      if (idx === -1) return;
-      if (cart[idx].quantity > 1) cart[idx].quantity -= 1;
-      else cart.splice(idx, 1);
       updateCartModal();
     }
 
+    // Função para atualizar o carrinho
     function updateCartModal() {
       const cartItems = document.getElementById('cart-items');
       const cartTotal = document.getElementById('cart-total');
       const cartCount = document.getElementById('cart-count');
+
       cartItems.innerHTML = '';
       total = 0;
-      let totalQty = 0;
 
-      if (cart.length === 0) cartItems.innerHTML = '<p>Seu carrinho está vazio.</p>';
-      else {
-        cart.forEach(item => {
-          const itemEl = document.createElement('div');
-          itemEl.className = 'cart-item';
-          itemEl.innerHTML = `
-            <div style="flex:1;">
-              <div style="font-weight:700">${escapeHtml(item.name)}</div>
-              <div style="color:#666">Qtd: ${item.quantity}</div>
-            </div>
-            <div style="text-align:right; min-width:100px;">
-              <div style="font-weight:700">${formatBRL(item.price * item.quantity)}</div>
-              <div style="margin-top:6px;">
-                <button class="remove-from-cart-btn" data-id="${item.id}">Remover</button>
-              </div>
-            </div>
-          `;
-          cartItems.appendChild(itemEl);
-          total += item.price * item.quantity;
-          totalQty += item.quantity;
-        });
-      }
+      cart.forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.classList.add('cart-item');
+        itemElement.innerHTML = `
+          <div class="cart-item-details">
+            <p class="cart-item-name">${item.name}</p>
+            <p class="cart-item-quantity">Qtd: ${item.quantity}</p>
+          </div>
+          <p class="cart-item-price">R$ ${(item.price * item.quantity).toFixed(2)}</p>
+          <button class="remove-from-cart-btn" data-name="${item.name}">Remover</button>
+        `;
 
-      cartTotal.textContent = formatBRL(total);
-      cartCount.textContent = totalQty;
-
-      document.querySelectorAll('.remove-from-cart-btn').forEach(btn => {
-        btn.addEventListener('click', () => removeItemCart(btn.dataset.id));
+        total += item.price * item.quantity;
+        cartItems.appendChild(itemElement);
       });
+
+      cartTotal.textContent = total.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      });
+
+      cartCount.textContent = cart.length;
     }
 
-    function openCart() {
-      document.getElementById('cart-modal').style.display = 'flex';
-      updateCartModal();
+    // Função para remover item do carrinho
+    function removeItemCart(name) {
+      const index = cart.findIndex(item => item.name === name);
+
+      if (index !== -1) {
+        const item = cart[index];
+
+        if (item.quantity > 1) {
+          item.quantity -= 1;
+        } else {
+          cart.splice(index, 1);
+        }
+
+        updateCartModal();
+      }
     }
 
-    function closeCart() {
-      document.getElementById('cart-modal').style.display = 'none';
-    }
-
-    async function checkout() {
-      if (cart.length === 0) return Toastify({ text: "O carrinho está vazio", duration: 1600 }).showToast();
-
-      const clienteNome = document.getElementById('cliente-nome').value.trim();
-      const clienteTelefone = document.getElementById('cliente-telefone').value.trim();
-      const endereco = document.getElementById('address').value.trim();
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+      const cartBtn = document.getElementById('cart-btn');
+      const closeModalBtn = document.getElementById('close-modal-btn');
+      const checkoutBtn = document.getElementById('checkout-btn');
+      const cartItemsContainer = document.getElementById('cart-items');
+      const addressInput = document.getElementById('address');
       const addressWarn = document.getElementById('address-warn');
 
-      if (!clienteNome || !clienteTelefone || !endereco) {
-        addressWarn.classList.remove('hidden');
-        return;
-      } else addressWarn.classList.add('hidden');
-
-      const pedido = {
-        cliente_nome: clienteNome,
-        cliente_telefone: clienteTelefone,
-        endereco,
-        itens: cart.map(item => ({
-          id: item.id,
-          nome: item.name,
-          preco: item.price,
-          quantidade: item.quantity
-        })),
-        total
-      };
-
-      try {
-        // primeiro envia pro banco
-        const response = await fetch(API_PEDIDO, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(pedido)
+      // Adicionar item ao carrinho
+      addToCartButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const name = button.getAttribute('data-name');
+          const price = button.getAttribute('data-price');
+          addToCart(name, price);
         });
-        if (!response.ok) throw new Error('Erro ao salvar pedido');
+      });
 
-        // depois abre WhatsApp
-        const itensMsg = cart.map(item => `${item.name} (x${item.quantity}) - R$${item.price.toFixed(2)}`).join('\n');
-        const msg = encodeURIComponent(
-          `🍪 Novo Pedido Big John Cookies:\n\n` +
-          `👤 Nome: ${clienteNome}\n` +
-          `📞 Telefone: ${clienteTelefone}\n` +
-          `📦 Pedido:\n${itensMsg}\n\n` +
-          `📍 Endereço: ${endereco}\n` +
-          `💰 Total: R$ ${total.toFixed(2)}`
-        );
-        const phone = '19986058820';
-        window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
-
-        // reset carrinho
-        cart = [];
+      // Abrir modal do carrinho
+      cartBtn.addEventListener('click', () => {
         updateCartModal();
-        closeCart();
-        document.getElementById('cliente-nome').value = '';
-        document.getElementById('cliente-telefone').value = '';
-        document.getElementById('address').value = '';
+        document.getElementById('cart-modal').classList.remove('hidden');
+      });
 
-        Toastify({ text: "Pedido enviado! Obrigado.", duration: 2200 }).showToast();
-      } catch (err) {
-        console.error(err);
-        alert('Erro ao enviar pedido. Tente novamente.');
-      }
-    }
+      // Fechar modal do carrinho
+      closeModalBtn.addEventListener('click', () => {
+        document.getElementById('cart-modal').classList.add('hidden');
+      });
 
-    document.addEventListener('DOMContentLoaded', () => {
-      carregarProdutos();
-      document.getElementById('cart-btn').addEventListener('click', openCart);
-      document.getElementById('close-modal-btn').addEventListener('click', closeCart);
-      document.getElementById('checkout-btn').addEventListener('click', checkout);
+      // Remover item do carrinho
+      cartItemsContainer.addEventListener('click', event => {
+        if (event.target.classList.contains('remove-from-cart-btn')) {
+          const name = event.target.getAttribute('data-name');
+          removeItemCart(name);
+        }
+      });
+
+      // Finalizar pedido
+      checkoutBtn.addEventListener('click', async () => {
+  if (cart.length === 0) return;
+
+  const clienteNome = document.getElementById('cliente-nome').value;
+  const clienteTelefone = document.getElementById('cliente-telefone').value;
+  const endereco = addressInput.value;
+
+  if (!endereco || !clienteNome || !clienteTelefone) {
+    addressWarn.classList.remove('hidden');
+    addressInput.classList.add('border-red-500');
+    return;
+  }
+
+  const pedido = {
+    cliente_nome: clienteNome,
+    cliente_telefone: clienteTelefone,
+    itens: cart,
+    total: total,
+    endereco: endereco
+  };
+
+  try {
+    const response = await fetch('https://tcc-uh9r.onrender.com/pedido', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(pedido)
     });
-  })();
+
+    if (!response.ok) throw new Error('Erro ao salvar pedido.');
+
+    // Sucesso — abrir WhatsApp
+    const itensMsg = cart.map(item =>
+      `${item.name} (x${item.quantity}) - R$${item.price.toFixed(2)}`
+    ).join('\n');
+
+    const msg = encodeURIComponent(
+      `🍪 Novo Pedido Big John Cookies:\n\n` +
+      `👤 Nome: ${clienteNome}\n` +
+      `📞 Telefone: ${clienteTelefone}\n` +
+      `📦 Pedido:\n${itensMsg}\n\n` +
+      `📍 Endereço: ${endereco}\n` +
+      `💰 Total: R$ ${total.toFixed(2)}`
+    );
+
+    const phone = '19986058820'; // Seu número com DDD
+    window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+
+    // Resetar carrinho
+    cart = [];
+    updateCartModal();
+    document.getElementById('cart-modal').classList.add('hidden');
+  } catch (error) {
+    alert('Erro ao enviar pedido. Tente novamente.');
+    console.error(error);
+  }
+});
+      
+    });
   </script>
 </body>
 </html>
