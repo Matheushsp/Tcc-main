@@ -1,138 +1,91 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Admin - Produtos Aleatórios</title>
-  <style>
-    :root {
-      --primary: #4361ee;
-      --success: #4cc9f0;
-      --danger: #f72585;
-      --gray: #6c757d;
-      --border: #dee2e6;
-      --shadow: 0 4px 6px rgba(0,0,0,0.1);
-      --radius: 8px;
-    }
-    body { font-family: Arial, sans-serif; background: #f5f7fb; color: #212529; margin:0; padding:0;}
-    .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
-    .product-card { background:white; padding:15px; border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:20px; }
-    .btn { padding:10px 20px; border:none; border-radius:var(--radius); cursor:pointer; background:var(--primary); color:white; font-weight:600; transition:0.3s; }
-    .btn:hover { background:#3f37c9; }
-    .products-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:20px; }
-    .product-header { display:flex; justify-content:space-between; margin-bottom:10px; }
-    .badge-success { background: rgba(76,201,240,0.2); color: var(--success); padding:3px 8px; border-radius:20px; font-size:0.75rem; }
-    .notification { position:fixed; top:20px; right:20px; padding:15px 20px; border-radius:var(--radius); box-shadow:var(--shadow); display:flex; gap:10px; transform:translateX(150%); transition: transform 0.4s ease; z-index:1000; }
-    .notification.show { transform:translateX(0); }
-    .notification-success { background:#d4edda; color:#155724; border-left:4px solid #28a745; }
-    .notification-error { background:#f8d7da; color:#721c24; border-left:4px solid #dc3545; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Admin - Produtos</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f5f7fb; padding: 20px; }
+  h1 { color: #4361ee; }
+  button { padding: 10px 20px; background: #4361ee; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+  button:hover { background: #3f37c9; }
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px,1fr)); gap: 15px; margin-top: 20px; }
+  .product-card { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+  .notification { position: fixed; top: 20px; right: 20px; padding: 10px 15px; border-radius: 5px; display: none; }
+  .success { background: #d4edda; color: #155724; }
+  .error { background: #f8d7da; color: #721c24; }
+</style>
 </head>
 <body>
-  <div class="container">
 
-    <!-- Botão único para adicionar produto aleatório -->
-    <div class="product-card">
-      <h3>Adicionar Produto Aleatório</h3>
-      <button class="btn btn-block" onclick="adicionarProdutoAleatorio()">Adicionar Produto</button>
-    </div>
+<h1>Painel Admin - Produtos</h1>
+<button onclick="adicionarProdutoAleatorio()">Adicionar Produto Aleatório</button>
 
-    <!-- Lista de produtos existentes -->
-    <div id="produtos">
-      <p>Carregando produtos...</p>
-    </div>
+<div id="produtos" class="products-grid"></div>
 
-  </div>
+<div id="notification" class="notification"></div>
 
-  <div id="notification" class="notification"></div>
+<script>
+const API = "https://tcc-uh9r.onrender.com"; // backend no Render
 
-  <script>
-    const API = window.location.hostname === "localhost"
-      ? "http://localhost:3000"
-      : "https://tcc-uh9r.onrender.com";
-
-    // ---------- Funções ----------
-    function gerarNomeAleatorio() {
-      const nomes = ["Cookie", "Bolo", "Pão", "Torta", "Doce", "Brigadeiro"];
-      return nomes[Math.floor(Math.random() * nomes.length)] + " " + Math.floor(Math.random() * 1000);
+// Carrega produtos existentes
+async function carregarProdutos() {
+  const container = document.getElementById("produtos");
+  container.innerHTML = "Carregando...";
+  try {
+    const res = await fetch(`${API}/api/produtos`);
+    const produtos = await res.json();
+    if (!produtos.length) {
+      container.innerHTML = "<p>Nenhum produto encontrado</p>";
+      return;
     }
+    container.innerHTML = produtos.map(p => `
+      <div class="product-card">
+        <strong>${p.nome}</strong><br>
+        Preço: R$ ${Number(p.preco).toFixed(2)}<br>
+        ${p.mais_vendido ? '<em>Mais vendido</em>' : ''}
+      </div>
+    `).join("");
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = "<p>Erro ao carregar produtos</p>";
+  }
+}
 
-    function gerarPrecoAleatorio() {
-      return (Math.random() * 45 + 5).toFixed(2);
-    }
+// Adiciona produto aleatório
+async function adicionarProdutoAleatorio() {
+  const nome = "Produto " + Math.floor(Math.random()*1000);
+  const preco = (Math.random()*50 + 1).toFixed(2);
+  const mais_vendido = Math.random() < 0.5;
+  const imagem = "produto.jpg";
 
-    async function adicionarProdutoAleatorio() {
-      const produto = {
-        nome: gerarNomeAleatorio(),
-        preco: parseFloat(gerarPrecoAleatorio()),
-        mais_vendido: Math.random() < 0.5,
-        imagem: "produto-teste.jpg"
-      };
+  try {
+    const res = await fetch(`${API}/produtos`, { // corrigido para /api/produtos
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nome, preco, mais_vendido, imagem })
+    });
+    if (!res.ok) throw new Error("Erro ao adicionar produto");
+    showNotification("Produto adicionado com sucesso!", "success");
+    carregarProdutos();
+  } catch (err) {
+    console.error(err);
+    showNotification("Falha ao adicionar produto", "error");
+  }
+}
 
-      try {
-        const res = await fetch(`${API}/api/produtos`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(produto)
-        });
+// Mostrar notificações
+function showNotification(msg, type) {
+  const el = document.getElementById("notification");
+  el.textContent = msg;
+  el.className = "notification " + type;
+  el.style.display = "block";
+  setTimeout(() => el.style.display = "none", 3000);
+}
 
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(text || 'Erro na resposta do servidor');
-        }
+// Inicializa
+carregarProdutos();
+</script>
 
-        const novoProduto = await res.json();
-        showNotification(`Produto "${novoProduto.nome}" adicionado!`, 'success');
-        carregar(); // recarrega lista de produtos
-      } catch (err) {
-        console.error("Erro ao adicionar produto:", err);
-        showNotification('Falha ao adicionar o produto', 'error');
-      }
-    }
-
-    async function carregar() {
-      try {
-        document.getElementById("produtos").innerHTML = `<p>Carregando produtos...</p>`;
-        const res = await fetch(API + "/api/produtos");
-        const produtos = await res.json();
-
-        let html = "";
-        if (produtos.length === 0) {
-          html = `<p>Nenhum produto encontrado.</p>`;
-        } else {
-          html = '<div class="products-grid">';
-          produtos.forEach(p => {
-            html += `
-              <div class="product-card">
-                <div class="product-header">
-                  <span>ID: ${p.id}</span>
-                  ${p.mais_vendido ? '<span class="badge-success">Mais Vendido</span>' : ''}
-                </div>
-                <div>Nome: ${p.nome}</div>
-                <div>Preço: R$ ${p.preco}</div>
-              </div>
-            `;
-          });
-          html += '</div>';
-        }
-        document.getElementById("produtos").innerHTML = html;
-
-      } catch (err) {
-        console.error("Erro ao carregar produtos:", err);
-        document.getElementById("produtos").innerHTML = `<p>Erro ao carregar produtos</p>`;
-      }
-    }
-
-    function showNotification(message, type) {
-      const notification = document.getElementById('notification');
-      notification.textContent = message;
-      notification.className = 'notification';
-      notification.classList.add(type === 'success' ? 'notification-success' : 'notification-error', 'show');
-      setTimeout(() => notification.classList.remove('show'), 4000);
-    }
-
-    // Inicial
-    carregar();
-  </script>
 </body>
 </html>
