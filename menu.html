@@ -100,7 +100,7 @@
     // carregar produtos do backend e renderizar
     async function carregarProdutos() {
       try {
-        const resp = await fetch("http://localhost:3000/api/produtos");
+        const resp = await fetch("https://tcc-uh9r.onrender.com/api/produtos");
 
         if (!resp.ok) throw new Error('Erro ao buscar produtos: ' + resp.status);
         const lista = await resp.json();
