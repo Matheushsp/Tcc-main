@@ -1,89 +1,76 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel Admin - Produtos</title>
-<style>
-  body { font-family: Arial, sans-serif; background: #f5f7fb; padding: 20px; }
-  h1 { color: #4361ee; }
-  button { padding: 10px 20px; background: #4361ee; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
-  button:hover { background: #3f37c9; }
-  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px,1fr)); gap: 15px; margin-top: 20px; }
-  .product-card { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-  .notification { position: fixed; top: 20px; right: 20px; padding: 10px 15px; border-radius: 5px; display: none; }
-  .success { background: #d4edda; color: #155724; }
-  .error { background: #f8d7da; color: #721c24; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ERP - Produtos</title>
+  <style>
+    body{font-family:Arial;background:#111;color:#eee;padding:20px}
+    button{padding:10px;border:0;background:#0f0;color:#000;margin-bottom:20px;cursor:pointer}
+    .product-card{background:#222;padding:10px;margin-bottom:8px;border:1px solid #333}
+  </style>
 </head>
 <body>
 
-<h1>Painel Admin - Produtos</h1>
-<button onclick="adicionarProdutoFixo()">Adicionar Cookie Chocolate</button>
+<h2>Produtos</h2>
 
-<div id="produtos" class="products-grid"></div>
+<button onclick="adicionarProdutoFixo()">Adicionar Produto Fixo</button>
 
-<div id="notification" class="notification"></div>
+<div id="produtos"></div>
 
 <script>
-const API = "https://tcc-uh9r.onrender.com";
+const API = "https://tcc-uh9r.onrender.com"; // seu backend
 
-// Carrega produtos existentes
-async function carregarProdutos() {
+// carregar produtos
+async function carregarProdutos(){
   const container = document.getElementById("produtos");
   container.innerHTML = "Carregando...";
-  try {
-    const res = await fetch(`${API}/produtos`);
+
+  try{
+    const res = await fetch(`${API}/api/produtos`);
+    if(!res.ok) throw new Error("Erro no GET");
     const produtos = await res.json();
-    if (!produtos.length) {
+
+    if(!produtos.length){
       container.innerHTML = "<p>Nenhum produto encontrado</p>";
       return;
     }
-    container.innerHTML = produtos.map(p => `
+
+    container.innerHTML = produtos.map(p=>`
       <div class="product-card">
         <strong>${p.nome}</strong><br>
         Preço: R$ ${Number(p.preco).toFixed(2)}<br>
-        ${p.mais_vendido ? '<em>Mais vendido</em>' : ''}
+        ${p.mais_vendido ? "<em>Mais vendido</em>" : ""}
       </div>
     `).join("");
-  } catch (err) {
+
+  }catch(err){
+    container.innerHTML = "<p>Erro ao carregar</p>";
     console.error(err);
-    container.innerHTML = "<p>Erro ao carregar produtos</p>";
   }
 }
 
-// Adiciona produto fixo
-async function adicionarProdutoFixo() {
-  const nome = "Cookie Chocolate";
-  const preco = 12.50;
-  const mais_vendido = true;
-  const imagem = "cookie.jpg";
-
-  try {
-    const res = await fetch(`${API}/api/produtos`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, preco, mais_vendido, imagem })
+// adicionar fixo
+async function adicionarProdutoFixo(){
+  try{
+    const res = await fetch(`${API}/api/produtos`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        nome:"Cookie Chocolate",
+        preco:9.90,
+        mais_vendido:true
+      })
     });
-    if (!res.ok) throw new Error("Erro ao adicionar produto");
-    showNotification("Produto Cookie Chocolate adicionado!", "success");
-    carregarProdutos();
-  } catch (err) {
+    if(!res.ok) throw new Error("Erro ao adicionar produto");
+
+    await carregarProdutos();
+  }catch(err){
     console.error(err);
-    showNotification("Falha ao adicionar produto", "error");
+    alert("Erro ao adicionar");
   }
 }
 
-// Mostrar notificações
-function showNotification(msg, type) {
-  const el = document.getElementById("notification");
-  el.textContent = msg;
-  el.className = "notification " + type;
-  el.style.display = "block";
-  setTimeout(() => el.style.display = "none", 3000);
-}
-
-// Inicializa
 carregarProdutos();
 </script>
 
