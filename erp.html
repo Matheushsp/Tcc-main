@@ -19,21 +19,21 @@
 <body>
 
 <h1>Painel Admin - Produtos</h1>
-<button onclick="adicionarProdutoAleatorio()">Adicionar Produto Aleatório</button>
+<button onclick="adicionarProdutoFixo()">Adicionar Cookie Chocolate</button>
 
 <div id="produtos" class="products-grid"></div>
 
 <div id="notification" class="notification"></div>
 
 <script>
-const API = "https://tcc-uh9r.onrender.com"; // backend no Render
+const API = "https://tcc-uh9r.onrender.com";
 
 // Carrega produtos existentes
 async function carregarProdutos() {
   const container = document.getElementById("produtos");
   container.innerHTML = "Carregando...";
   try {
-    const res = await fetch(`${API}/api/produtos`);
+    const res = await fetch(`${API}/produtos`);
     const produtos = await res.json();
     if (!produtos.length) {
       container.innerHTML = "<p>Nenhum produto encontrado</p>";
@@ -52,21 +52,21 @@ async function carregarProdutos() {
   }
 }
 
-// Adiciona produto aleatório
-async function adicionarProdutoAleatorio() {
-  const nome = "Produto " + Math.floor(Math.random()*1000);
-  const preco = (Math.random()*50 + 1).toFixed(2);
-  const mais_vendido = Math.random() < 0.5;
-  const imagem = "produto.jpg";
+// Adiciona produto fixo
+async function adicionarProdutoFixo() {
+  const nome = "Cookie Chocolate";
+  const preco = 12.50;
+  const mais_vendido = true;
+  const imagem = "cookie.jpg";
 
   try {
-    const res = await fetch(`${API}/produtos`, { // corrigido para /api/produtos
+    const res = await fetch(`${API}/api/produtos`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ nome, preco, mais_vendido, imagem })
     });
     if (!res.ok) throw new Error("Erro ao adicionar produto");
-    showNotification("Produto adicionado com sucesso!", "success");
+    showNotification("Produto Cookie Chocolate adicionado!", "success");
     carregarProdutos();
   } catch (err) {
     console.error(err);
