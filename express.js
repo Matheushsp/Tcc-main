@@ -118,7 +118,22 @@ app.post("/pedido", async (req, res) => {
 
 app.post('/api/produtos', async (req, res) => {
   const { nome, preco, mais_vendido, imagem } = req.body;
-  // inserir no banco
+
+  try {
+    // Exemplo usando PostgreSQL
+    const query = `
+      INSERT INTO produtos (nome, preco, mais_vendido, imagem)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *;
+    `;
+    const values = [nome, preco, mais_vendido, imagem];
+    const result = await pool.query(query, values);
+
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error('Erro ao adicionar produto:', err);
+    res.status(500).json({ error: 'Erro ao adicionar produto' });
+  }
 });
 
 
