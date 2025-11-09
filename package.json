@@ -22,23 +22,5 @@
     "express": "^4.21.2",
     "pg": "^8.16.0"
   }
-  {
-  "name": "cardapio-api",
-  "version": "1.0.0",
-  "description": "API TCC Cardápio",
-  "main": "app.js",
-  "scripts": {
-    "start": "node app.js"
-  },
-  "dependencies": {
-    "bcrypt": "^5.1.1",
-    "cors": "^2.8.5",
-    "express": "^4.19.2",
-    "pg": "^8.11.3"
-  },
-  "engines": {
-    "node": "18.x"
-  }
-}
-
+  
 }
