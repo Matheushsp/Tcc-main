@@ -1,0 +1,81 @@
+# Automação Financeira e Comercial para Pequenos Negócios: Sistema Integrado de Vendas e Gestão Financeira
+
+Este projeto é o desenvolvimento do Trabalho de Conclusão de Curso (TCC) do curso de **Sistemas de Informação**, com o objetivo de propor uma solução tecnológica que auxilie microempreendedores na gestão integrada de vendas e finanças.
+
+A solução foi pensada inicialmente a partir do cenário de uma pequena loja de cookies, onde foi observada a necessidade de centralizar processos de vendas, pedidos, comunicação com clientes e acompanhamento financeiro.
+
+---
+
+## 📌 Contexto e Problema
+
+Pequenos negócios enfrentam desafios recorrentes relacionados à organização de pedidos, controle de estoque, precificação e acompanhamento financeiro. Muitas vezes, esses processos são feitos de forma manual, gerando retrabalho, erros e falta de dados confiáveis para tomada de decisão.
+
+---
+
+## 🎯 Objetivo da Solução
+
+O projeto propõe a criação de um sistema integrado que:
+
+- facilite a venda online
+- centralize pedidos
+- use automação com WhatsApp para comunicação
+- ofereça base de dados estruturada para armazenamento
+- permita evoluir para dashboards, relatórios e BI
+
+---
+
+## 🧪 Funcionalidades Implementadas
+
+Atualmente o sistema já possui:
+
+- Site de vendas em HTML/CSS/JS
+- Comunicação via WhatsApp (link direto para pedido)
+- Banco de dados em PostgreSQL com tabelas para pedidos
+- Painel interno de controle (dashboard simples)
+- Primeiras automações financeiras (cálculo de valores)
+
+---
+
+## 🛠 Tecnologias Utilizadas
+
+- HTML / CSS / JavaScript
+- TypeScript / Node.js / Express
+- PostgreSQL
+- Integração WhatsApp API
+- Futuro uso de Power BI para análise de dados
+
+---
+
+## 🧩 Arquitetura da Solução
+
+A solução é dividida em camadas:
+
+| Camada | Função |
+|---|---|
+| Front-end | Interface de vendas e interação do cliente |
+| Back-end Node.js | Lógica de aplicação e API |
+| Banco de dados PostgreSQL | Armazenamento de pedidos e informações financeiras |
+| Integração WhatsApp | Canal de comunicação entre cliente e negócio |
+
+---
+
+## 🚧 Status do Projeto
+
+Em desenvolvimento ativo.
+
+---
+
+## 📍 Trabalhos Futuros
+
+- automatizar pagamentos via PIX
+- implementar dashboards financeiros avançados em Power BI
+- desenvolver sistema automatizado de precificação
+- melhorar modulação do banco de dados
+- implementar relatórios gerenciais automáticos
+
+---
+
+## 📄 Licença
+
+Projeto acadêmico. Uso livre para fins educacionais e de pesquisa 
+# PROIBIDO VENDA #.
