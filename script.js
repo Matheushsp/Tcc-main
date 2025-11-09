@@ -190,9 +190,8 @@ function showToast(msg, type = "success") {
   }).showToast();
 }
 
-// Inicializa
-loadCart();
 
+const API = "https://tcc-uh9r.onrender.com";
 
 async function adicionarProduto() {
   const nome = document.getElementById("novo_nome").value;
@@ -200,7 +199,6 @@ async function adicionarProduto() {
   const mais_vendido = document.getElementById("novo_mv").checked;
   const imagem = document.getElementById("novo_img").value;
 
-  // Validação básica
   if (!nome.trim()) {
     showNotification('Por favor, preencha o nome do produto', 'error');
     document.getElementById("novo_nome").focus();
@@ -222,15 +220,15 @@ async function adicionarProduto() {
 
     if (response.ok) {
       showNotification('Produto adicionado com sucesso!', 'success');
-      // Limpa o formulário
       document.getElementById("novo_nome").value = "";
       document.getElementById("novo_preco").value = "";
       document.getElementById("novo_mv").checked = false;
       document.getElementById("novo_img").value = "";
-
-      carregar(); // Recarrega a lista para mostrar o novo produto
+      carregar();
     } else {
-      throw new Error('Erro na resposta do servidor');
+      const text = await response.text();
+      console.error('Erro do servidor:', text);
+      showNotification('Falha ao adicionar o produto', 'error');
     }
   } catch (err) {
     console.error("Erro ao adicionar produto:", err);
