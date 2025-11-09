@@ -9,7 +9,10 @@
   <div id="produtos"></div>
 
   <script>
-    const API = "http://localhost:3000"
+    const API = window.location.hostname === "localhost"
+  ? "http://localhost:3000"
+  : "https://tcc-uh9r.onrender.com";
+
 
     async function carregar(){
       const res = await fetch(API + "/produtos")
