@@ -192,3 +192,48 @@ function showToast(msg, type = "success") {
 
 // Inicializa
 loadCart();
+
+
+async function adicionarProduto() {
+  const nome = document.getElementById("novo_nome").value;
+  const preco = parseFloat(document.getElementById("novo_preco").value);
+  const mais_vendido = document.getElementById("novo_mv").checked;
+  const imagem = document.getElementById("novo_img").value;
+
+  // Validação básica
+  if (!nome.trim()) {
+    showNotification('Por favor, preencha o nome do produto', 'error');
+    document.getElementById("novo_nome").focus();
+    return;
+  }
+
+  if (isNaN(preco) || preco <= 0) {
+    showNotification('Por favor, insira um preço válido', 'error');
+    document.getElementById("novo_preco").focus();
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API}/api/produtos`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nome, preco, mais_vendido, imagem })
+    });
+
+    if (response.ok) {
+      showNotification('Produto adicionado com sucesso!', 'success');
+      // Limpa o formulário
+      document.getElementById("novo_nome").value = "";
+      document.getElementById("novo_preco").value = "";
+      document.getElementById("novo_mv").checked = false;
+      document.getElementById("novo_img").value = "";
+
+      carregar(); // Recarrega a lista para mostrar o novo produto
+    } else {
+      throw new Error('Erro na resposta do servidor');
+    }
+  } catch (err) {
+    console.error("Erro ao adicionar produto:", err);
+    showNotification('Falha ao adicionar o produto', 'error');
+  }
+}
