@@ -204,36 +204,61 @@
         }
       });
 
-      checkoutBtn.addEventListener('click', () => {
-        if(cart.length === 0) return;
+      checkoutBtn.addEventListener('click', async () => {
+  if(cart.length === 0) return;
 
-        const clienteNome = document.getElementById('cliente-nome').value;
-        const clienteTelefone = document.getElementById('cliente-telefone').value;
-        const endereco = addressInput.value;
+  const clienteNome = document.getElementById('cliente-nome').value;
+  const clienteTelefone = document.getElementById('cliente-telefone').value;
+  const endereco = addressInput.value;
 
-        if(!clienteNome || !clienteTelefone || !endereco){
-          addressWarn.classList.remove('hidden');
-          addressInput.classList.add('border-red-500');
-          return;
-        }
+  if(!clienteNome || !clienteTelefone || !endereco){
+    addressWarn.classList.remove('hidden');
+    addressInput.classList.add('border-red-500');
+    return;
+  }
 
-        const itensMsg = cart.map(item => `${item.name} (x${item.quantity}) - R$${item.price.toFixed(2)}`).join('\n');
-        const msg = encodeURIComponent(
-          `🍪 Novo Pedido Big John Cookies:\n\n` +
-          `👤 Nome: ${clienteNome}\n` +
-          `📞 Telefone: ${clienteTelefone}\n` +
-          `📦 Pedido:\n${itensMsg}\n\n` +
-          `📍 Endereço: ${endereco}\n` +
-          `💰 Total: R$ ${total.toFixed(2)}`
-        );
+  const pedido = {
+    cliente_nome: clienteNome,
+    cliente_telefone: clienteTelefone,
+    endereco: endereco,
+    itens: cart,
+    total: total
+  };
 
-        const phone = '19986058820';
-        window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+  try {
+    // Salva no banco
+    const response = await fetch('https://tcc-uh9r.onrender.com/pedido', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(pedido)
+    });
 
-        cart = [];
-        updateCartModal();
-        document.getElementById('cart-modal').classList.add('hidden');
-      });
+    if(!response.ok) throw new Error('Erro ao salvar pedido');
+
+    // Abre WhatsApp
+    const itensMsg = cart.map(item => `${item.name} (x${item.quantity}) - R$${item.price.toFixed(2)}`).join('\n');
+    const msg = encodeURIComponent(
+      `🍪 Novo Pedido Big John Cookies:\n\n` +
+      `👤 Nome: ${clienteNome}\n` +
+      `📞 Telefone: ${clienteTelefone}\n` +
+      `📦 Pedido:\n${itensMsg}\n\n` +
+      `📍 Endereço: ${endereco}\n` +
+      `💰 Total: R$ ${total.toFixed(2)}`
+    );
+    const phone = '19986058820';
+    window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+
+    // Limpa carrinho
+    cart = [];
+    updateCartModal();
+    document.getElementById('cart-modal').classList.add('hidden');
+
+  } catch(err) {
+    alert('Erro ao enviar pedido. Tente novamente.');
+    console.error(err);
+  }
+});
+
     });
   </script>
 </body>
