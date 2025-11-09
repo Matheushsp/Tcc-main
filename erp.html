@@ -9,45 +9,59 @@
   <div id="produtos"></div>
 
   <script>
-    const API = "https://tcc-uh9r.onrender.com/api/produtos"
+    // Base da API (funciona tanto local quanto no Render)
+    const API = window.location.hostname === "localhost"
+      ? "http://localhost:3000"
+      : "https://tcc-uh9r.onrender.com";
 
-    async function carregar(){
-      const res = await fetch(API + "/produtos")
-      const produtos = await res.json()
+    async function carregar() {
+      try {
+        const res = await fetch(API + "/api/produtos"); // pega todos os produtos
+        const produtos = await res.json();
 
-      let html = ""
-      produtos.forEach(p=>{
-        html += `
-          <div style="border:1px solid #ccc;padding:10px;margin:10px;">
-            <p>ID: ${p.id}</p>
-            <label>Nome:</label>
-            <input type="text" id="nome_${p.id}" value="${p.nome}" /><br>
-            <label>Preço:</label>
-            <input type="number" step="0.01" id="preco_${p.id}" value="${p.preco}" /><br>
-            <label>Mais vendido:</label>
-            <input type="checkbox" id="mv_${p.id}" ${p.mais_vendido ? "checked" : ""} /><br><br>
-            <button onclick="salvar(${p.id})">Salvar</button>
-          </div>
-        `
-      })
-      document.getElementById("produtos").innerHTML = html
+        let html = "";
+        produtos.forEach(p => {
+          html += `
+            <div style="border:1px solid #ccc;padding:10px;margin:10px;">
+              <p>ID: ${p.id}</p>
+              <label>Nome:</label>
+              <input type="text" id="nome_${p.id}" value="${p.nome}" /><br>
+              <label>Preço:</label>
+              <input type="number" step="0.01" id="preco_${p.id}" value="${p.preco}" /><br>
+              <label>Mais vendido:</label>
+              <input type="checkbox" id="mv_${p.id}" ${p.mais_vendido ? "checked" : ""} /><br><br>
+              <button onclick="salvar(${p.id})">Salvar</button>
+            </div>
+          `;
+        });
+        document.getElementById("produtos").innerHTML = html;
+      } catch (err) {
+        console.error("Erro ao carregar produtos:", err);
+      }
     }
 
-    async function salvar(id){
-      const nome = document.getElementById("nome_"+id).value
-      const preco = parseFloat(document.getElementById("preco_"+id).value)
-      const mais_vendido = document.getElementById("mv_"+id).checked
+    async function salvar(id) {
+      const nome = document.getElementById("nome_" + id).value;
+      const preco = parseFloat(document.getElementById("preco_" + id).value);
+      const mais_vendido = document.getElementById("mv_" + id).checked;
 
-      await fetch(API + "/produtos/"+id, {
-        method:"PUT",
-        headers:{ "Content-Type":"application/json" },
-        body:JSON.stringify({nome,preco,mais_vendido})
-      })
+      try {
+        await fetch(`${API}/produtos/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nome, preco, mais_vendido })
+        });
 
-      alert("Atualizado com sucesso!")
+        alert("Atualizado com sucesso!");
+        carregar(); // recarrega a lista para refletir alterações
+      } catch (err) {
+        console.error("Erro ao salvar produto:", err);
+        alert("Falha ao atualizar o produto.");
+      }
     }
 
-    carregar()
+    // Carrega produtos ao abrir a página
+    carregar();
   </script>
 </body>
 </html>

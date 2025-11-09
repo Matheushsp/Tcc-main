@@ -196,16 +196,8 @@
 <script>
 async function carregarMaisVendidos() {
   try {
-// Define a base da API dependendo se está local ou no Render
-const API = window.location.hostname === "localhost"
-  ? "http://localhost:3000"
-  : "https://tcc-uh9r.onrender.com/api/produtos";
-
-// ================== PRODUTOS ==================
-async function carregarMaisVendidos() {
-  try {
-    // fetch para produtos usando a base API
-    const res = await fetch(`${API}/api/produtos`);
+    const res = await fetch("https://tcc-uh9r.onrender.com/api/produtos");
+    
     const produtos = await res.json();
 
     // converte 'mais_vendido' para boolean
