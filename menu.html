@@ -239,73 +239,77 @@
       document.getElementById('cart-modal').setAttribute('aria-hidden', 'true');
     }
 
-    // checkout: valida dados e envia pedido
     async function checkout() {
-      if (cart.length === 0) {
-        Toastify({ text: "O carrinho está vazio", duration: 1600 }).showToast();
-        return;
-      }
+  if (cart.length === 0) {
+    Toastify({ text: "O carrinho está vazio", duration: 1600 }).showToast();
+    return;
+  }
 
-      const clienteNome = document.getElementById('cliente-nome').value.trim();
-      const clienteTelefone = document.getElementById('cliente-telefone').value.trim();
-      const endereco = document.getElementById('address').value.trim();
-      const addressWarn = document.getElementById('address-warn');
+  const clienteNome = document.getElementById('cliente-nome').value.trim();
+  const clienteTelefone = document.getElementById('cliente-telefone').value.trim();
+  const endereco = document.getElementById('address').value.trim();
+  const addressWarn = document.getElementById('address-warn');
 
-      if (!clienteNome || !clienteTelefone || !endereco) {
-        addressWarn.classList.remove('hidden');
-        return;
-      } else {
-        addressWarn.classList.add('hidden');
-      }
+  if (!clienteNome || !clienteTelefone || !endereco) {
+    addressWarn.classList.remove('hidden');
+    return;
+  } else {
+    addressWarn.classList.add('hidden');
+  }
 
-      const pedido = {
-        cliente_nome: clienteNome,
-        cliente_telefone: clienteTelefone,
-        itens: cart,
-        total: total,
-        endereco: endereco
-      };
+  const pedido = {
+    cliente_nome: clienteNome,
+    cliente_telefone: clienteTelefone,
+    itens: cart.map(item => ({
+      produto_id: item.id,
+      produto_nome: item.name,
+      preco: item.price,
+      quantidade: item.quantity
+    })),
+    total: total,
+    endereco: endereco
+  };
 
-      try {
-        // monta mensagem primeiro
-const itensMsg = cart.map(item => `${item.name} (x${item.quantity}) - R$${item.price.toFixed(2)}`).join('\n');
-const msg = encodeURIComponent(
-  `🍪 Novo Pedido Big John Cookies:\n\n` +
-  `👤 Nome: ${clienteNome}\n` +
-  `📞 Telefone: ${clienteTelefone}\n` +
-  `📦 Pedido:\n${itensMsg}\n\n` +
-  `📍 Endereço: ${endereco}\n` +
-  `💰 Total: R$ ${total.toFixed(2)}`
-);
+  try {
+    // Primeiro salva no banco
+    const response = await fetch(API_PEDIDO, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(pedido)
+    });
 
-const phone = '19986058820';
+    if (!response.ok) throw new Error('Erro ao salvar pedido.');
 
-// ABRE primeiro
-window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+    // Depois abre WhatsApp
+    const itensMsg = cart.map(item => `${item.name} (x${item.quantity}) - R$${item.price.toFixed(2)}`).join('\n');
+    const msg = encodeURIComponent(
+      `🍪 Novo Pedido Big John Cookies:\n\n` +
+      `👤 Nome: ${clienteNome}\n` +
+      `📞 Telefone: ${clienteTelefone}\n` +
+      `📦 Pedido:\n${itensMsg}\n\n` +
+      `📍 Endereço: ${endereco}\n` +
+      `💰 Total: R$ ${total.toFixed(2)}`
+    );
 
-// depois salva no banco
-const response = await fetch(API_PEDIDO, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(pedido)
-});
+    const phone = '19986058820';
+    window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
 
+    // Resetar carrinho
+    cart = [];
+    updateCartModal();
+    closeCart();
+    document.getElementById('cliente-nome').value = '';
+    document.getElementById('cliente-telefone').value = '';
+    document.getElementById('address').value = '';
 
-        // resetar carrinho
-        cart = [];
-        updateCartModal();
-        closeCart();
-        document.getElementById('cliente-nome').value = '';
-        document.getElementById('cliente-telefone').value = '';
-        document.getElementById('address').value = '';
+    Toastify({ text: "Pedido enviado! Obrigado.", duration: 2200 }).showToast();
 
-        Toastify({ text: "Pedido enviado! Obrigado.", duration: 2200 }).showToast();
+  } catch (err) {
+    console.error(err);
+    alert('Erro ao enviar pedido. Tente novamente.');
+  }
+}
 
-      } catch (err) {
-        console.error(err);
-        alert('Erro ao enviar pedido. Tente novamente.');
-      }
-    }
 
     // === Event listeners iniciais ===
     document.addEventListener('DOMContentLoaded', () => {
