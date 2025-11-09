@@ -82,6 +82,36 @@ app.get("/api/produtos", async (req, res) => {
   }
 });
 
+// CRIAR PRODUTO
+app.post('/api/produtos', async (req, res) => {
+  try {
+    let { nome, preco, mais_vendido, imagem } = req.body;
+
+    if (!nome || typeof nome !== 'string' || !nome.trim()) {
+      return res.status(400).json({ error: 'Nome do produto obrigatório' });
+    }
+    preco = parseFloat(preco);
+    if (isNaN(preco) || preco <= 0) {
+      return res.status(400).json({ error: 'Preço inválido' });
+    }
+    mais_vendido = !!mais_vendido;
+    imagem = imagem && typeof imagem === 'string' ? imagem : null;
+
+    const query = `
+      INSERT INTO produtos (nome, preco, mais_vendido, imagem)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *;
+    `;
+    const values = [nome, preco, mais_vendido, imagem];
+
+    const result = await pool.query(query, values);
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error('Erro ao adicionar produto:', err);
+    res.status(500).json({ error: 'Erro ao adicionar produto', details: err.message });
+  }
+});
+
 // ====================== PEDIDO ======================
 
 // Listar pedidos
@@ -115,39 +145,6 @@ app.post("/pedido", async (req, res) => {
     res.status(500).json({ erro: "Erro ao salvar pedido" });
   }
 });
-
-app.post('/api/produtos', async (req, res) => {
-  try {
-    let { nome, preco, mais_vendido, imagem } = req.body;
-
-    // Validações básicas
-    if (!nome || typeof nome !== 'string' || !nome.trim()) {
-      return res.status(400).json({ error: 'Nome do produto obrigatório' });
-    }
-    preco = parseFloat(preco);
-    if (isNaN(preco) || preco <= 0) {
-      return res.status(400).json({ error: 'Preço inválido' });
-    }
-    mais_vendido = !!mais_vendido; // garante boolean
-    imagem = imagem && typeof imagem === 'string' ? imagem : null; // permite null
-
-    // Query para inserir
-    const query = `
-      INSERT INTO produtos (nome, preco, mais_vendido, imagem)
-      VALUES ($1, $2, $3, $4)
-      RETURNING *;
-    `;
-    const values = [nome, preco, mais_vendido, imagem];
-
-    const result = await pool.query(query, values);
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
-    console.error('Erro ao adicionar produto:', err);
-    res.status(500).json({ error: 'Erro ao adicionar produto', details: err.message });
-  }
-});
-
-
 
 // ====================== INÍCIO DO SERVIDOR ======================
 const PORT = process.env.PORT || 3000;
