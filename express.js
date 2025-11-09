@@ -116,10 +116,11 @@ app.post("/pedido", async (req, res) => {
   }
 });
 
-app.post('https://tcc-uh9r.onrender.com/api/produtos', async (req, res) => {
+app.post('/api/produtos', async (req, res) => {
   const { nome, preco, mais_vendido, imagem } = req.body;
-  // código para inserir no banco
+  // inserir no banco
 });
+
 
 
 // ====================== INÍCIO DO SERVIDOR ======================
