@@ -2,9 +2,9 @@
   "name": "cardapio",
   "version": "1.0.0",
   "description": "",
-  "main": "serve.js",
+  "main": "express.js",
   "scripts": {
-    "start": "node serve.js",
+    "start": "node express.js",
     "dev": "npx tailwindcss -i ./styles/style.css -o ./styles/output.css --watch"
   },
   "keywords": [],
