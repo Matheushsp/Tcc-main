@@ -197,6 +197,8 @@
 async function carregarMaisVendidos() {
   try {
     const res = await fetch("https://tcc-uh9r.onrender.com/api/produtos");
+  
+    const API_PEDIDO = "https://tcc-uh9r.onrender.com/pedido"; // backend no Render
     
     const produtos = await res.json();
 
